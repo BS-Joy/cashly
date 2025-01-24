@@ -191,6 +191,15 @@
   border: 1px solid #E35151;
 }
 
+.ant-input-outlined:hover {
+  border: 1px solid #E35151;
+}
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+  border: 1px solid #E35151;
+}
+
 .ant-otp-input {
   border-radius: 8px;
 }

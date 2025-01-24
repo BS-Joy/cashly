@@ -273,7 +273,7 @@ const Admin = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input last name!",
+                    message: "Please input password!",
                   },
                 ]}
               >
@@ -292,7 +292,7 @@ const Admin = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please input last name!",
+                    message: "Please input password!",
                   },
                 ]}
               >
