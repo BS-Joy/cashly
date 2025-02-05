@@ -4,9 +4,9 @@ const RoundedButton = ({ children, onClickHandler, className }) => {
   return (
     <button
       // disabled={isLoading}
-      htmlType="submit"
+      type="submit"
       className={cn(
-        `w-full px-2 py-3 bg-red-700 text-white rounded-full`,
+        `w-full px-2 py-3 bg-red-700 text-white rounded-full flex items-center justify-center`,
         className
       )}
       onClick={onClickHandler}

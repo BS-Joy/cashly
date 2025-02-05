@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import exlamIcon from "../assets/images/exclamation-circle.png";
 
 const DashboardHomeTable = () => {
-
-
   const columns = [
     {
       title: "#SI",
@@ -30,11 +28,15 @@ const DashboardHomeTable = () => {
     {
       title: "Action",
       key: "Review",
-      aligen: 'center',
+      aligen: "center",
       render: (_, data) => (
         <div className="  items-center justify-around textcenter flex">
           {/* Review Icon */}
-          <img src={exlamIcon} alt="" className="btn  px-3 py-1 text-sm rounded-full" />
+          <img
+            src={exlamIcon}
+            alt=""
+            className="btn  px-3 py-1 text-sm rounded-full"
+          />
           {/* <Link to={'/reviews'} className="btn bg-black text-white px-3 py-1 text-sm rounded-full">
            
             View
@@ -63,7 +65,7 @@ const DashboardHomeTable = () => {
       {/* Ant Design Table */}
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={data.map((item) => ({ ...item, key: item._id }))}
         pagination={false}
         className="rounded-lg"
       />

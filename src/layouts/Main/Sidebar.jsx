@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/Logo.png";
-import logout from "../../assets/images/logout.png";
+import logoutImage from "../../assets/images/logout.png";
 import { createElement, useEffect, useState } from "react";
 import { routeLinkGenerators } from "../../utils/routeLinkGenerators";
 import { dashboardItems } from "../../constants/router.constants";
@@ -8,11 +8,15 @@ import Swal from "sweetalert2";
 import { FiLogOut } from "react-icons/fi";
 import { MdOutlineArrowRight } from "react-icons/md";
 import { cn } from "../../lib/utils";
+import { logout } from "../../features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openNome, setOpenNome] = useState({});
+
+  const dispatch = useDispatch();
 
   const handleLogOut = () => {
     Swal.fire({
@@ -25,9 +29,8 @@ const Sidebar = () => {
       reverseButtons: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        // dispatch(logout());
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("user-update");
+        console.log("logged out");
+        dispatch(logout());
         navigate("/auth");
       }
     });
@@ -45,7 +48,7 @@ const Sidebar = () => {
           <ul className="mt-10 max-h-[650px] overflow-y-auto space-y-1 xl:space-y-2 px-4">
             {routeLinkGenerators(dashboardItems).map(
               ({ name, icon, path, children, rootPath }, indx) =>
-                children?.length ? null
+                children?.length ? null : (
                   // (
                   //     <li key={indx} className="overflow-hidden">
                   //       <button
@@ -107,31 +110,30 @@ const Sidebar = () => {
                   //         ))}
                   //       </div>
                   //     </li>
-                  //   ) 
-                  : (
-                    <li
-                      onClick={() => {
-                        setOpenNome((c) => ({
-                          name: c?.name === name ? null : name,
-                        }));
-                      }}
-                      key={indx}
+                  //   )
+                  <li
+                    onClick={() => {
+                      setOpenNome((c) => ({
+                        name: c?.name === name ? null : name,
+                      }));
+                    }}
+                    key={indx}
+                  >
+                    <NavLink
+                      to={path}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "bg-primary text-white" +
+                            " w-full px-4 py-3 flex items-center justify-start gap-3 text-md transition-all rounded-full"
+                          : " hover:text-white  hover:bg-primary" +
+                            " w-full px-4 py-3 flex items-center justify-start gap-3 text-md transition-all rounded-full"
+                      }
                     >
-                      <NavLink
-                        to={path}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "bg-primary text-white" +
-                            " w-full px-4 py-3 flex items-center justify-start gap-3 text-md transition-all rounded-full"
-                            : " hover:text-white  hover:bg-primary" +
-                            " w-full px-4 py-3 flex items-center justify-start gap-3 text-md transition-all rounded-full"
-                        }
-                      >
-                        <div>{createElement(icon, { size: "18" })}</div>
-                        <span> {name}</span>
-                      </NavLink>
-                    </li>
-                  )
+                      <div>{createElement(icon, { size: "18" })}</div>
+                      <span> {name}</span>
+                    </NavLink>
+                  </li>
+                )
             )}
           </ul>
         </div>
@@ -140,7 +142,7 @@ const Sidebar = () => {
             onClick={handleLogOut}
             className="w-full text-red-300 font-semibold px-12 py-3 flex items-center justify-center gap-3 text-md outline-none rounded-full"
           >
-            <img className="" src={logout} alt="" />
+            <img className="" src={logoutImage} alt="" />
             <span className="text-red-300 font-light">Log Out</span>
           </button>
         </div>

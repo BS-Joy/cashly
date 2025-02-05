@@ -26,12 +26,7 @@ const EditAboutUs = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button
-          size="large"
-          type="primary"
-          htmlType="submit"
-          className="px-8 w-[250px]"
-        >
+        <Button size="large" type="primary" className="px-8 w-[250px]">
           Save Changes
         </Button>
       </div>

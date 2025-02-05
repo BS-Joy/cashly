@@ -3,7 +3,12 @@ import Form from "antd/es/form/Form";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RoundedButton from "../../Components/RoundedButton";
-// import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../../features/user/authSlice";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../features/user/userSlice";
+import toast from "react-hot-toast";
+import LoadingSpinner from "../../Components/LoadingSpinner";
+import { Cookies } from "react-cookie";
 // import { usePostLoginMutation } from "../../redux/features/Auth/authApi";
 // import { setUser } from "../../redux/features/Auth/authSlice";
 // import Swal from "sweetalert2";
@@ -11,10 +16,11 @@ import RoundedButton from "../../Components/RoundedButton";
 const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const dispatch = useDispatch();
-  // const [setData, { isLoading }] = usePostLoginMutation();
+  const dispatch = useDispatch();
+  const [loginUser, { isLoading }] = useLoginMutation();
+  const cookies = new Cookies();
+
   const onFinish = async (values) => {
-    navigate(location.state ? location.state : "/");
     // try {
     //   const response = await setData(values);
     //   // console.log(response);
@@ -53,6 +59,24 @@ const SignIn = () => {
     //     text: "Something went wrong. Please try again later.",
     //   });
     // }
+    // console.log(values);
+    try {
+      const res = await loginUser(values);
+      if (res?.data?.success && res?.data?.data?.accessToken) {
+        let userProfile = res?.data?.data?.user;
+        if (userProfile?.password) {
+          const { password, ...rest } = userProfile;
+          cookies.set("user_profile", rest, { path: "/" });
+          dispatch(setUser(rest));
+        }
+        toast.success("Login Successfull.");
+        navigate("/");
+      } else if (res?.error) {
+        toast.error(res?.error?.data?.message);
+      }
+    } catch (error) {
+      toast.error("Something wen wrong!");
+    }
   };
   return (
     <div className="min-h-[92vh] w-full flex justify-center items-center gap-1 lg:gap-8 z-10">
@@ -72,9 +96,9 @@ const SignIn = () => {
           <Form
             name="normal_login"
             layout="vertical"
-            initialValues={{
-              remember: false,
-            }}
+            // initialValues={{
+            //   remember: false,
+            // }}
             onFinish={onFinish}
             requiredMark={false}
             className="text-start"
@@ -126,11 +150,6 @@ const SignIn = () => {
               />
             </Form.Item>
             <div className="flex justify-between items-center">
-              {/* <Form.Item name="remember" valuePropName="checked">
-                <Checkbox className="text-base font-medium">
-                  Remember me
-                </Checkbox>
-              </Form.Item> */}
               <Form.Item>
                 <button
                   onClick={() => navigate("/auth/forgot-password")}
@@ -142,7 +161,16 @@ const SignIn = () => {
               </Form.Item>
             </div>
             <div className="w-full flex justify-center ">
-              <RoundedButton>Sign In</RoundedButton>
+              <RoundedButton>
+                {isLoading ? (
+                  <div className="flex gap-2 items-center">
+                    <span>Signing in</span>
+                    <LoadingSpinner size={5} color="stroke-white" />
+                  </div>
+                ) : (
+                  "Sign In"
+                )}
+              </RoundedButton>
             </div>
           </Form>
         </div>

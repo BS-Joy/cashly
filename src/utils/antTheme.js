@@ -68,7 +68,7 @@ export const mainTheme = {
     Select: {
       controlHeightLG: 56,
       colorBorder: "#26363F",
-      borderRadiusLG: "16px",
+      borderRadiusLG: "8px",
       colorTextPlaceholder: "#26363F",
     },
     //   DatePicker: {

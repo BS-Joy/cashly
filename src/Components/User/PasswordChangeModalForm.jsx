@@ -118,12 +118,7 @@ const PasswordChangeModalForm = ({ isModalOpen, setIsModalOpen }) => {
             Forget Password?
           </Button>
           <Form.Item>
-            <Button
-              size="large"
-              type="primary"
-              htmlType="submit"
-              className="w-full"
-            >
+            <Button size="large" type="primary" className="w-full">
               Update Password
             </Button>
           </Form.Item>

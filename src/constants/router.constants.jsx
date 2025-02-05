@@ -57,13 +57,18 @@ import EditSubscription from "../pages/Main/Subscription/EditSubscription";
 import { MdOutlineSubscriptions } from "react-icons/md";
 import AddSubscription from "../pages/Main/Subscription/AddSubscription";
 import AgencyRequest from "../pages/Main/AgencyRequest/AgencyRequest";
+import PrivateProtectedRoute from "../routes/PrivateProtectedRoute";
 
 export const dashboardItems = [
   {
     name: "Dashboard",
     path: "/",
     icon: RiDashboardHorizontalLine,
-    element: <DashboardHome />,
+    element: (
+      <PrivateProtectedRoute>
+        <DashboardHome />
+      </PrivateProtectedRoute>
+    ),
   },
   {
     name: "Buyer",
@@ -162,10 +167,10 @@ export const dashboardItems = [
     icon: IoSettingsOutline,
     element: <Setting />,
   },
-  {
-    path: "/hosts/:id",
-    element: <HostDetails />,
-  },
+  // {
+  //   path: "/hosts/:id",
+  //   element: <HostDetails />,
+  // },
   {
     name: "Settings",
     rootPath: "settings",

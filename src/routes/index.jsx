@@ -7,8 +7,8 @@ import { dashboardItems } from "../constants/router.constants";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import ResetPassword from "../pages/Auth/ResetPassword";
-import ChatPage from "../pages/Main/Support/ChatPage";
-import ChangePassword from "../pages/Main/Setting/Change-password/ChangePassword";
+// import ChatPage from "../pages/Main/Support/ChatPage";
+// import ChangePassword from "../pages/Main/Setting/Change-password/ChangePassword";
 import SuccessPasswordChange from "../pages/Auth/SuccessPasswordChange";
 
 const router = createBrowserRouter([
@@ -17,14 +17,14 @@ const router = createBrowserRouter([
     element: <Main />,
     children: routesGenerators(dashboardItems),
   },
-  {
-    path: "/support-chat",
-    element: <ChatPage />,
-  },
-  {
-    path: "/change-password",
-    element: <ChangePassword />,
-  },
+  // {
+  //   path: "/support-chat",
+  //   element: <ChatPage />,
+  // },
+  // {
+  //   path: "/change-password",
+  //   element: <ChangePassword />,
+  // },
   {
     path: "/auth",
     element: <Auth />,
