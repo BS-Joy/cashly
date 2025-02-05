@@ -13,13 +13,9 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
           url: "/buyer/get-all-buyers",
           headers: {
             Authorization: `Bearer ${token}`,
-            // "Content-Type": "application/json",
           },
           method: "GET",
         };
-      },
-      transformResponse: (response) => {
-        return response;
       },
       //   providesTags: ["dashboard"],
     }),

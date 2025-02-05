@@ -1,86 +1,97 @@
-import { Select } from "antd";
-import React, { PureComponent } from "react";
+import { Select, Spin } from "antd";
+import React, { useState, useEffect } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useGetEarningDataForChartQuery } from "../../../features/dashboard/dashboardSlice";
+import ChartLoadingSkeleton from "../../../Components/ChartLoadingSkeleton";
 
-const data = [
-  { name: "Jan", uv: 4000, amt: 2400 },
-  { name: "Feb", uv: 3000, amt: 2210 },
-  { name: "Mar", uv: 2000, amt: 2290 },
-  { name: "Apr", uv: 2780, amt: 2000 },
-  { name: "May", uv: 1890, amt: 2181 },
-  { name: "June", uv: 2390, amt: 2500 },
-  { name: "July", uv: 3490, amt: 2100 },
-  { name: "Aug", uv: 1490, amt: 2100 },
-  { name: "Sep", uv: 3090, amt: 2100 },
-  { name: "Oct", uv: 3111, amt: 2100 },
-  { name: "Nov", uv: 1987, amt: 2100 },
-  { name: "Dec", uv: 2490, amt: 2100 },
-];
+// const earningsData = {
+//   success: true,
+//   message: "Dashboard earning chart retrieved successfully",
+//   data: [
+//     {
+//       _id: "2025",
+//       earnings: [
+//         { month: "Jan", totalAmount: 10 },
+//         { month: "Feb", totalAmount: 20 },
+//         { month: "Mar", totalAmount: 30 },
+//         { month: "Apr", totalAmount: 40 },
+//         { month: "May", totalAmount: 50 },
+//         { month: "Jun", totalAmount: 60 },
+//         { month: "Jul", totalAmount: 70 },
+//         { month: "Aug", totalAmount: 80 },
+//         { month: "Sep", totalAmount: 90 },
+//         { month: "Oct", totalAmount: 100 },
+//         { month: "Nov", totalAmount: 110 },
+//         { month: "Dec", totalAmount: 120 },
+//       ],
+//     },
+//   ],
+// };
 
 const BarChartComponent = () => {
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const { data, isSuccess, isLoading, isError, error } =
+    useGetEarningDataForChartQuery();
+  const [chartData, setChartData] = useState([]);
 
-  return (
-    <div>
-      <div className="flex items-center justify-between py-7">
-        <h1 className="text-sm md:text-2xl text-black-300">Overview</h1>
-        <Select
-          defaultValue="2024 May"
-          style={{
-            width: 120,
-            color: "#545454",
-          }}
-          variant="borderless"
-          suffixIcon={<MdOutlineKeyboardArrowDown color="gray" fontSize={30} />}
-          onChange={handleChange}
-          options={[
-            {
-              value: "2024 May",
-              label: "2024 May",
-            },
-            {
-              value: "2024 Apr",
-              label: "2024 Apr",
-            },
-          ]}
-        />
-      </div>
-      <ResponsiveContainer width="100%" height={500}>
-        <BarChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid horizontal={true} vertical={false} />
-          <XAxis dataKey="name" />
-          <YAxis
-            tickFormatter={(value) => `${value / 1000}k`} // Converts numbers to "k" format
+  useEffect(() => {
+    if (data?.success) {
+      const transformedData = data.data[0].earnings.map((entry) => ({
+        name: entry.month,
+        earnings: entry.totalAmount,
+      }));
+      setChartData(transformedData);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <ChartLoadingSkeleton />;
+  }
+
+  if (isError) {
+    return <p>Sorry. Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    return (
+      <div>
+        <div className="flex items-center justify-between py-7">
+          <h1 className="text-sm md:text-2xl text-black-300">
+            Earnings Overview
+          </h1>
+          <Select
+            defaultValue="2025"
+            style={{ width: 120, color: "#545454" }}
+            variant="borderless"
+            suffixIcon={
+              <MdOutlineKeyboardArrowDown color="gray" fontSize={30} />
+            }
+            options={[{ value: "2025", label: "2025" }]} // Can be expanded for multiple years
           />
-          <Tooltip cursor={{ fill: "transparent" }} />
-          {/* <Legend /> */}
-          <Bar dataKey="uv" fill="#932017" barSize={40} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
+        </div>
+        <ResponsiveContainer width="100%" height={500}>
+          <BarChart
+            data={chartData}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid horizontal={true} vertical={false} />
+            <XAxis dataKey="name" />
+            <YAxis tickFormatter={(value) => `$${value}`} />
+            <Tooltip cursor={{ fill: "transparent" }} />
+            <Bar dataKey="earnings" fill="#932017" barSize={40} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
 };
+
 export default BarChartComponent;

@@ -1,22 +1,23 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Table } from "antd";
-import { FiAlertCircle } from "react-icons/fi";
+import { Table } from "antd";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import DashboardModal from "../../../Components/DashboardModal";
-import { IoSearch } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import RoundedButton from "../../../Components/RoundedButton";
 import { useGetAllBuyersQuery } from "../../../features/buyer/buyerSlice";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
 
 const Buyers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
-  const { data: buyersList, isSuccess } = useGetAllBuyersQuery();
-
-  if (isSuccess) {
-    console.log(buyersList);
-  }
+  const {
+    data: buyersList,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useGetAllBuyersQuery();
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -26,9 +27,9 @@ const Buyers = () => {
   const columns = [
     {
       title: "#SL",
-      dataIndex: "transIs",
-      key: "transIs",
-      render: (text) => <a>{text}</a>,
+      dataIndex: "index",
+      key: "index",
+      render: (_, __, index) => index + 1, // Auto-generate serial number
     },
     {
       title: "Name",
@@ -37,61 +38,81 @@ const Buyers = () => {
     },
     {
       title: "Email",
-      dataIndex: "Email",
-      key: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Phone Number",
-      key: "Phone",
-      dataIndex: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Action",
-      key: "Review",
-      aligen: "center",
+      key: "action",
+      align: "center",
       render: (_, data) => (
-        <div className="  items-center justify-around textcenter flex ">
-          {/* Review Icon */}
+        <div className="flex items-center justify-around text-center">
           <img
             src={exlamIcon}
-            alt=""
-            className="btn  px-3 py-1 text-sm rounded-full cursor-pointer"
+            alt="View Details"
+            className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
             onClick={() => showModal(data)}
           />
-          {/* <Link to={'/reviews'} className="btn bg-black text-white px-3 py-1 text-sm rounded-full">
-               
-                View
-              </Link> */}
         </div>
       ),
     },
   ];
 
-  const data = [];
-  for (let index = 0; index < 20; index++) {
-    data.push({
-      transIs: `${index + 1}`,
-      name: "Henry",
-      Email: "sharif@gmail.com",
-      Phone: "+12746478994",
-      Review: "See Review",
-      date: "16 Apr 2024",
-      _id: index,
-    });
+  let pageContent;
+
+  if (isLoading) {
+    pageContent = <LoadingSpinner size={12} color="stroke-primary" />;
+  }
+
+  if (isError) {
+    pageContent = <p className="text-red-500">Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    const filteredBuyers = buyersList.data.result.filter(
+      (d) => d.loginStatus === "approved"
+    );
+
+    if (filteredBuyers.length === 0) {
+      pageContent = (
+        <div className="text-center text-gray-500 mt-4">No buyers found.</div>
+      );
+    } else {
+      pageContent = (
+        <Table
+          columns={columns}
+          dataSource={filteredBuyers.map((item, index) => ({
+            key: item._id,
+            index: index + 1, // SL number
+            name: item.buyer
+              ? `${item.buyer.firstName || ""} ${
+                  item.buyer.lastName || ""
+                }`.trim() || "Not available"
+              : "Not available",
+
+            email: item.email || "Not available",
+            phone: item.phone || "Not available",
+            transAmount: item.transAmount || "Not available",
+            subscription: item.subscription || "Not available",
+          }))}
+          pagination={{ position: ["bottomCenter"] }}
+          className="rounded-lg"
+        />
+      );
+    }
   }
 
   return (
     <div className="rounded-lg border py-4 border-black mt-8 recent-users-table">
       <h3 className="text-2xl text-black mb-4 pl-2">Buyer List</h3>
-      {/* Ant Design Table */}
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"] }}
-        className="rounded-lg"
-      />
 
-      {/* Dashboard Modal */}
+      {pageContent}
+      {/* Buyer Details Modal */}
       <DashboardModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
@@ -99,29 +120,25 @@ const Buyers = () => {
       >
         <div>
           <h2 className="text-lg text-center mb-4">Buyer Details</h2>
-          {/* <div className="flex justify-between mb-2 text-gray-600">
-            <p>#SL</p>
-            <p>{modalData.transIs}</p>
-          </div> */}
           <div className="flex justify-between mb-6 text-gray-600">
             <p>Buyer Name:</p>
-            <p>{modalData.name}</p>
+            <p>{modalData.name || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Address:</p>
-            <p>{modalData.Email}</p>
+            <p>Email:</p>
+            <p>{modalData.email || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Date:</p>
-            <p>{modalData.Phone}</p>
+            <p>Phone:</p>
+            <p>{modalData.phone || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
             <p>Transaction amount :</p>
-            <p>{modalData.transIs}</p>
+            <p>{modalData.transAmount || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
             <p>Subscription Purchased:</p>
-            <p>{modalData.transIs}</p>
+            <p>{modalData.subscription || "Not available"}</p>
           </div>
         </div>
         <div className="flex justify-center mt-4">

@@ -17,7 +17,22 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getEarningDataForChart: builder.query({
+      query: () => {
+        const cookies = new Cookies();
+        const token = cookies.get("token");
+
+        return {
+          url: "/dashboard/get-total-earning",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetDashboardSummaryQuery } = extendedDashboardApiSlice;
+export const { useGetDashboardSummaryQuery, useGetEarningDataForChartQuery } =
+  extendedDashboardApiSlice;
