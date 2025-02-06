@@ -21,45 +21,6 @@ const SignIn = () => {
   const cookies = new Cookies();
 
   const onFinish = async (values) => {
-    // try {
-    //   const response = await setData(values);
-    //   // console.log(response);
-    //   if (response?.data?.statusCode == 200) {
-    //     if (response?.data?.data?.user?.role === "ADMIN") {
-    //       localStorage.setItem("token", response?.data?.data?.token);
-    //       dispatch(
-    //         setUser({
-    //           user: response?.data?.data?.user,
-    //           token: response?.data?.data?.token,
-    //         })
-    //       );
-    //       // navigate(from, { replace: true });
-    //       navigate(location.state ? location.state : "/");
-    //     } else {
-    //       Swal.fire({
-    //         icon: "error",
-    //         title: "Login Failed!!",
-    //         text: "You are not a Valid",
-    //       });
-    //     }
-    //   } else {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title:
-    //         response?.data?.message ||
-    //         response?.error?.data?.message ||
-    //         "Login Failed!!",
-    //       text: "Something went wrong. Please try again later.",
-    //     });
-    //   }
-    // } catch (error) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Login Failed!!",
-    //     text: "Something went wrong. Please try again later.",
-    //   });
-    // }
-    // console.log(values);
     try {
       const res = await loginUser(values);
       if (res?.data?.success && res?.data?.data?.accessToken) {
@@ -80,9 +41,6 @@ const SignIn = () => {
   };
   return (
     <div className="min-h-[92vh] w-full flex justify-center items-center gap-1 lg:gap-8 z-10">
-      {/* <div className="lg:border-r-2 border-primary mx-auto w-[92%] lg:p-[15%] lg:pr-[20%] ">
-        <img src={image} alt="" />
-      </div> */}
       <div className="lg:p-[1%] p-[2%] bg-white rounded-xl order-first lg:order-last">
         <div className="w-full py-[44px] lg:px-[44px]">
           <div className="pb-[30px] space-y-2">
@@ -151,13 +109,13 @@ const SignIn = () => {
             </Form.Item>
             <div className="flex justify-between items-center">
               <Form.Item>
-                <button
+                <p
                   onClick={() => navigate("/auth/forgot-password")}
                   // type="link"
                   className="text-base text-black-200 hover:text-black-300 font-medium text-info"
                 >
                   Forget password?
-                </button>
+                </p>
               </Form.Item>
             </div>
             <div className="w-full flex justify-center ">
