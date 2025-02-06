@@ -19,7 +19,33 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         return response;
       },
     }),
+    getAllAdmin: builder.query({
+      query: () => "/admin/get-admin",
+      providesTags: (result) => {
+        if (result?.data) {
+          const { data } = result;
+
+          const adminTags = data.map(({ _id }) => ({
+            type: "admin",
+            id: _id,
+          }));
+
+          return [...adminTags, { type: "admin", id: "LIST" }];
+        }
+
+        return [{ type: "admin", id: "LIST" }];
+      },
+    }),
+
+    createAdmin: builder.mutation({
+      query: (adminData) => ({
+        url: "admin/create-admin",
+        method: "POST",
+        body: adminData,
+      }),
+      invalidatesTags: () => [{ type: "admin", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useLoginMutation } = extendedAuthApiSlice;
+export const { useLoginMutation, useGetAllAdminQuery } = extendedAuthApiSlice;

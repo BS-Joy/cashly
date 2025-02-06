@@ -1,7 +1,50 @@
 import Swal from "sweetalert2";
 import { driverItems } from "../../../constants/driver.constants";
+import { useGetAllAgenciesQuery } from "../../../features/buyer/buyerAgencySlice";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
+import BuyerRequestCard from "../BuyerRequest/BuyerRequestCard";
+import AgencyRequestCard from "./AgencyRequestCard";
 
 const AgencyRequest = () => {
+  const {
+    data: agencyList,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useGetAllAgenciesQuery();
+
+  let pageContent;
+
+  if (isLoading) {
+    pageContent = (
+      <div className="flex justify-center items-center h-[50vh]">
+        <LoadingSpinner size={12} color="stroke-primary" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    pageContent = <p className="text-red-500">Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    if (agencyList.data.result.length === 0) {
+      pageContent = (
+        <div className="text-center text-gray-500 mt-4">
+          No agency request yet!
+        </div>
+      );
+    } else {
+      pageContent = (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {agencyList.data.result.map((item, index) => (
+            <AgencyRequestCard item={item} key={index} />
+          ))}
+        </div>
+      );
+    }
+  }
+
   const handleDeleteConfirmation = () => {
     Swal.fire({
       text: "Are you sure you want to delete?",
@@ -20,82 +63,7 @@ const AgencyRequest = () => {
       }
     });
   };
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {driverItems.map((item, index) => (
-        <div
-          key={index}
-          className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2"
-        >
-          <div className="flex items-center justify-center flex-col">
-            <img
-              src={item.image}
-              alt="driver"
-              className="w-16 h-16 object-contain"
-            />
-            <h3 className="text-black">{item.name}</h3>
-            <p className="text-black/90 text-sm">{item.designation}</p>
-          </div>
-          <div className="driver-request__info">
-            <h1 className="text-sm md:text-xl text-black pl-4 mb-3">
-              Documents
-            </h1>
-            <div className="flex items-center justify-center text-xs gap-8">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <img
-                  src={item.doc1.image}
-                  alt="pdf"
-                  className="w-16 h-16 object-contain"
-                />
-                <p>{item.doc1.name}</p>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-2">
-                <img
-                  src={item.doc2.image}
-                  alt="pdf"
-                  className="w-16 h-16 object-contain"
-                />
-                <p>{item.doc2.name}</p>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-2">
-                <img
-                  src={item.doc3.image}
-                  alt="pdf"
-                  className="w-16 h-16 object-contain"
-                />
-                <p>{item.doc3.name}</p>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-2">
-                <img
-                  src={item.doc4.image}
-                  alt="pdf"
-                  className="w-16 h-16 object-contain"
-                />
-                <p>{item.doc4.name}</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-center gap-1">
-            <div className="p-4  text-center flex items-center justify-center">
-              <button className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-sm outline-none rounded-lg">
-                <span className="text-white font-light">Approved</span>
-              </button>
-            </div>
-            <div className="p-4  text-center flex items-center justify-center">
-              <button className="w-fit bg-transparent text-black border border-red-700 px-10 py-[7px] flex items-center justify-center gap-3 text-sm outline-none rounded-lg">
-                <span
-                  className="text-black font-light"
-                  onClick={handleDeleteConfirmation}
-                >
-                  Delete
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <>{pageContent}</>;
 };
 
 export default AgencyRequest;

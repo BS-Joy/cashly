@@ -187,6 +187,16 @@
   color: #333333;
 }
 
+.ant-pagination .ant-pagination-item-active:hover {
+  border: 1px solid #E35151;
+
+}
+
+.ant-pagination-item-active:hover a {
+  color: #E35151 !important;
+  cursor: not-allowed;
+}
+
 .ant-pagination .ant-pagination-item-active {
   border: 1px solid #E35151;
 }

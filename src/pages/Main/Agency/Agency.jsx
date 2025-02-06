@@ -5,10 +5,23 @@ import DashboardModal from "../../../Components/DashboardModal";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import exlamIcon from "../../../assets/images/exclamation-circle.png";
+import {
+  useGetAllAgenciesQuery,
+  useGetAllBuyersQuery,
+} from "../../../features/buyer/buyerAgencySlice";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
 
 const Agency = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
+
+  const {
+    data: agencyList,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useGetAllAgenciesQuery();
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -18,9 +31,9 @@ const Agency = () => {
   const columns = [
     {
       title: "#SL",
-      dataIndex: "transIs",
-      key: "transIs",
-      render: (text) => <a>{text}</a>,
+      dataIndex: "index",
+      key: "index",
+      render: (_, __, index) => index + 1, // Auto-generate serial number
     },
     {
       title: "Name",
@@ -29,58 +42,84 @@ const Agency = () => {
     },
     {
       title: "Email",
-      dataIndex: "Email",
-      key: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Phone Number",
-      key: "Phone",
-      dataIndex: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Action",
-      key: "Review",
-      aligen: "center",
+      key: "action",
+      align: "center",
       render: (_, data) => (
-        <div className="  items-center justify-around textcenter flex ">
-          {/* Review Icon */}
+        <div className="flex items-center justify-around text-center">
           <img
             src={exlamIcon}
-            alt=""
-            className="btn  px-3 py-1 text-sm rounded-full cursor-pointer"
+            alt="View Details"
+            className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
             onClick={() => showModal(data)}
           />
-          {/* <Link to={'/reviews'} className="btn bg-black text-white px-3 py-1 text-sm rounded-full">
-                 
-                  View
-                </Link> */}
         </div>
       ),
     },
   ];
 
-  const data = [];
-  for (let index = 0; index < 20; index++) {
-    data.push({
-      transIs: `${index + 1}`,
-      name: "Henry",
-      Email: "sharif@gmail.com",
-      Phone: "+12746478994",
-      Review: "See Review",
-      date: "16 Apr 2024",
-      _id: index,
-    });
+  let pageContent;
+
+  if (isLoading) {
+    pageContent = (
+      <div className="flex justify-center">
+        <LoadingSpinner size={12} color="stroke-primary" />
+      </div>
+    );
   }
+
+  if (isError) {
+    pageContent = <p className="text-red-500">Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    console.log(agencyList);
+
+    if (agencyList.data.result.length === 0) {
+      pageContent = (
+        <div className="text-center text-gray-500 mt-4">No buyers found.</div>
+      );
+    } else {
+      pageContent = (
+        <Table
+          columns={columns}
+          dataSource={agencyList.data.result.map((item, index) => {
+            const agency = item.userId.agency;
+            return {
+              key: agency._id,
+              index: index + 1, // SL number
+              name: agency
+                ? `${agency.firstName || ""} ${agency.lastName || ""}`.trim() ||
+                  "Not available"
+                : "Not available",
+
+              email: agency.email || "Not available",
+              phone: agency.phone || "Not available",
+              // transAmount: agency.transAmount || "Not available",
+              // subscription: agency.subscription || "Not available",
+            };
+          })}
+          pagination={{ position: ["bottomCenter"] }}
+          className="rounded-lg"
+        />
+      );
+    }
+  }
+
   return (
     <div className="rounded-lg border py-4 border-black mt-8 recent-users-table">
       <h3 className="text-2xl text-black mb-4 pl-2">Agency List</h3>
       {/* Ant Design Table */}
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ position: ["bottomCenter"] }}
-        className="rounded-lg"
-      />
+      {pageContent}
 
       {/* Dashboard Modal */}
       <DashboardModal
@@ -93,23 +132,23 @@ const Agency = () => {
           <h2 className="text-lg text-center mb-4">Agency Details</h2>
           <div className="flex justify-between mb-6 text-gray-600">
             <p>Agency Name :</p>
-            <p>{modalData.transIs}</p>
+            <p>{modalData.name || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Address :</p>
-            <p>{modalData.name}</p>
+            <p>Email:</p>
+            <p>{modalData.email || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Date :</p>
-            <p>{modalData.Email}</p>
+            <p>Phone:</p>
+            <p>{modalData.phone || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Transaction Amount :</p>
-            <p>{modalData.Phone}</p>
+            <p>Transaction amount :</p>
+            <p>{modalData.transAmount || "Not available"}</p>
           </div>
           <div className="flex justify-between mb-6 text-gray-600">
-            <p>Subscription Purchased :</p>
-            <p>{modalData.transIs}</p>
+            <p>Subscription Purchased:</p>
+            <p>{modalData.subscription || "Not available"}</p>
           </div>
 
           <div className="p-4 mt-auto text-center mx-auto flex items-center justify-center">

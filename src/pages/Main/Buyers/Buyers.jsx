@@ -4,7 +4,7 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import DashboardModal from "../../../Components/DashboardModal";
 import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import RoundedButton from "../../../Components/RoundedButton";
-import { useGetAllBuyersQuery } from "../../../features/buyer/buyerSlice";
+import { useGetAllBuyersQuery } from "../../../features/buyer/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 
 const Buyers = () => {
@@ -17,7 +17,7 @@ const Buyers = () => {
     isError,
     error,
     isSuccess,
-  } = useGetAllBuyersQuery();
+  } = useGetAllBuyersQuery("approved");
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -66,7 +66,11 @@ const Buyers = () => {
   let pageContent;
 
   if (isLoading) {
-    pageContent = <LoadingSpinner size={12} color="stroke-primary" />;
+    pageContent = (
+      <div className="flex justify-center">
+        <LoadingSpinner size={12} color="stroke-primary" />
+      </div>
+    );
   }
 
   if (isError) {
@@ -74,11 +78,11 @@ const Buyers = () => {
   }
 
   if (isSuccess) {
-    const filteredBuyers = buyersList.data.result.filter(
-      (d) => d.loginStatus === "approved"
-    );
+    // const filteredBuyers = buyersList.data.result.filter(
+    //   (d) => d.loginStatus === "approved"
+    // );
 
-    if (filteredBuyers.length === 0) {
+    if (buyersList.data.result.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">No buyers found.</div>
       );
@@ -86,7 +90,7 @@ const Buyers = () => {
       pageContent = (
         <Table
           columns={columns}
-          dataSource={filteredBuyers.map((item, index) => ({
+          dataSource={buyersList.data.result.map((item, index) => ({
             key: item._id,
             index: index + 1, // SL number
             name: item.buyer
@@ -142,7 +146,7 @@ const Buyers = () => {
           </div>
         </div>
         <div className="flex justify-center mt-4">
-          <RoundedButton className="w-fit px-24">Download</RoundedButton>
+          <RoundedButton className="w-fit px-24">Suspend</RoundedButton>
         </div>
       </DashboardModal>
     </div>

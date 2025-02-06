@@ -8,7 +8,7 @@ import { useState } from "react";
 import RoundedButton from "../../../Components/RoundedButton";
 import { AiOutlineFullscreen } from "react-icons/ai";
 
-export default function BuyerRequestCard({ item }) {
+export default function AgencyRequestCard({ item }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -17,9 +17,9 @@ export default function BuyerRequestCard({ item }) {
     setModalData(data);
   };
 
-  const buyer = item?.userId?.buyer;
+  const agency = item?.userId?.agency;
 
-  const buyerImage = getImageUrl(buyer.image, defaultThumbnail);
+  const agencyImage = getImageUrl(agency?.image, defaultThumbnail);
 
   const docImages = item.image;
   const docPdf = item.document;
@@ -46,7 +46,7 @@ export default function BuyerRequestCard({ item }) {
     <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2">
       <div className="flex items-center justify-center flex-col">
         <img
-          src={buyerImage}
+          src={agencyImage}
           alt="profile_picture"
           onError={(e) => (e.target.src = defaultThumbnail)}
           className="w-16 h-16 object-contain rounded-full"
