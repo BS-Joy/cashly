@@ -140,9 +140,7 @@ const Admin = () => {
           <Form
             name="normal_login"
             layout="vertical"
-            initialValues={{
-              remember: false,
-            }}
+            initialValues={{}}
             onFinish={() => console.log("task finish")}
             requiredMark={false}
             className="text-start w-full mt-6"
