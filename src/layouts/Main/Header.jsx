@@ -5,12 +5,21 @@ import profileImage from "../../assets/images/dash-profile.png";
 import { TbBellRinging } from "react-icons/tb";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Select } from "antd";
+import { useSelector } from "react-redux";
+import { getImageUrl } from "../../utils/getImageUrl";
+
+const defaultThumbnail =
+  "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
 
 const Header = () => {
   const navigate = useNavigate();
   const loacatin = useLocation();
   const notificationRef = useRef(null);
   const [notificationPopup, setNotificationPopup] = useState(false);
+
+  const user = useSelector((state) => state.user.user);
+
+  const profileImage = getImageUrl(user?.image, defaultThumbnail);
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -70,6 +79,7 @@ const Header = () => {
             <img
               src={profileImage}
               alt=""
+              onError={(e) => (e.target.src = defaultThumbnail)}
               className="rounded-full h-[42px] w-[42px]"
             />
           </div>
@@ -94,7 +104,9 @@ const Header = () => {
               },
             ]}
           /> */}
-          <p className="ml-4">Jane Cooper</p>
+          <p className="ml-4">
+            {user?.firstName + "  " + user?.lastName || "Name unavailable"}
+          </p>
         </div>
       </div>
     </div>
