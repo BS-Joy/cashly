@@ -41,7 +41,7 @@ const ForgotPassword = () => {
       {/* <div className="border-r-0 lg:border-r-2 border-primary w-[99%] p-[8%] lg:p-[12%] lg:pr-0">
         <img src={image} alt="" />
       </div> */}
-      <div className="lg:p-[1%] order-first lg:order-last bg-white rounded-xl">
+      <div className="lg:p-[1%] order-first lg:order-last bg-white w-[35%] rounded-xl">
         <div className="w-full py-[64px] lg:px-[44px] space-y-8">
           <div className="flex flex-col items-center lg:items-start">
             <PageHeading

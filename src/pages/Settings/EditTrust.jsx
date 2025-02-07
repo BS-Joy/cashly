@@ -6,6 +6,11 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import Quill from "quill";
+import {
+  useGetTermsConditionQuery,
+  useGetTrustSafetyQuery,
+} from "../../features/dashboard/dashboardSlice";
+import LoadingSpinner from "../../Components/LoadingSpinner";
 
 // Import 'size' style attributor
 const Size = Quill.import("attributors/style/size");
@@ -37,14 +42,23 @@ const formats = [
   "bold",
   "italic",
   "underline",
+  "strike", // Add 'strike' here if you want to use it
   "link",
   "image",
   "list",
 ];
+
 const EditTrust = () => {
   const navigate = useNavigate();
-  const [content, setContent] = useState("");
-  console.log(content);
+  const { data, isLoading, isError, error, isSuccess } =
+    useGetTrustSafetyQuery();
+  const [content, setContent] = useState(data?.data?.description || "");
+
+  useEffect(() => {
+    if (isSuccess && data?.data?.description) {
+      setContent(data.data.description);
+    }
+  }, [isSuccess, data]);
 
   useEffect(() => {
     const quillContainer = document.querySelector(".ql-toolbar"); // Get the toolbar
@@ -75,6 +89,38 @@ const EditTrust = () => {
     };
   }, []);
 
+  let trust;
+
+  if (isLoading) {
+    trust = (
+      <div className="flex justify-center">
+        <LoadingSpinner size={12} color="stroke-primary" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    trust = <p className="text-red-500">Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    trust = (
+      <div className="h-full rounded-md">
+        <div className="ql-toolbar-container border border-[#DD3663] rounded-lg max-h-[400px] overflow-y-auto">
+          <ReactQuill
+            placeholder="Enter your updated trust & safety..."
+            theme="snow"
+            value={content}
+            onChange={(value) => setContent(value)}
+            modules={modules}
+            formats={formats}
+            className="custom-quill-editor h-full"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex items-center gap-2 text-xl">
@@ -90,21 +136,7 @@ const EditTrust = () => {
           <h3 className="text-2xl text-black mb-4 mt-6 pb-3 pl-16">
             Trust & Safety Edit
           </h3>
-          <div className="w-full px-16">
-            <div className="h-full rounded-md">
-              <div className="ql-toolbar-container border border-[#DD3663] rounded-lg max-h-[400px] overflow-y-auto">
-                <ReactQuill
-                  placeholder="Enter your updated trust & safety..."
-                  theme="snow"
-                  value={content}
-                  onChange={(value) => setContent(value)}
-                  modules={modules}
-                  formats={formats}
-                  className="custom-quill-editor h-full"
-                />
-              </div>
-            </div>
-          </div>
+          <div className="w-full px-16">{trust}</div>
           <div className="flex justify-end pt-8 pr-16">
             <button
               // onClick={(e) => navigate(`edit`)}

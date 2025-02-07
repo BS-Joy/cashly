@@ -7,6 +7,8 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Select } from "antd";
 import { useSelector } from "react-redux";
 import { getImageUrl } from "../../utils/getImageUrl";
+import { useGetAdminNotificationsQuery } from "../../features/dashboard/dashboardSlice";
+import LoadingSpinner from "../../Components/LoadingSpinner";
 
 const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
@@ -16,6 +18,23 @@ const Header = () => {
   const loacatin = useLocation();
   const notificationRef = useRef(null);
   const [notificationPopup, setNotificationPopup] = useState(false);
+
+  const {
+    data: notifications,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetAdminNotificationsQuery();
+
+  let notifactionCount;
+
+  if (isError) {
+    notifactionCount = <p className="text-white">!</p>;
+  }
+
+  if (isSuccess) {
+    notifactionCount = notifications?.data?.meta?.unread;
+  }
 
   const user = useSelector((state) => state.user.user);
 
@@ -58,21 +77,26 @@ const Header = () => {
           onClick={(e) => navigate("/notifications")}
           className="relative flex items-center "
         >
-          <Badge
-            style={{
-              backgroundColor: "#932017",
-              width: "20px",
-              height: "20px",
-              objectFit: "contain",
-            }}
-            count={1}
-          >
-            <TbBellRinging
-              style={{ cursor: "pointer" }}
-              className={` w-6 h-6 rounded-full shadow-sm  font-bold transition-all`}
-              color="#932017"
-            />
-          </Badge>
+          {isLoading ? (
+            <LoadingSpinner size={5} color="stroke-primary" />
+          ) : (
+            <Badge
+              style={{
+                backgroundColor: "#932017",
+                width: "20px",
+                height: "20px",
+                objectFit: "contain",
+                fontSize: "10px",
+              }}
+              count={notifactionCount}
+            >
+              <TbBellRinging
+                style={{ cursor: "pointer" }}
+                className={` w-6 h-6 rounded-full shadow-sm  font-bold transition-all`}
+                color="#932017"
+              />
+            </Badge>
+          )}
         </div>
         <div className="flex items-center">
           <div>

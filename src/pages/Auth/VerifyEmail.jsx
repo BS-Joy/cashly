@@ -79,7 +79,7 @@ const VerifyEmail = () => {
               <OTPInput
                 value={otp}
                 onChange={setOtp}
-                numInputs={4}
+                numInputs={6}
                 inputStyle={{
                   height: "70px",
                   width: "70px",

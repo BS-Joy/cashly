@@ -1,6 +1,6 @@
 import { IoIosNotificationsOutline } from "react-icons/io";
 
-export default function NotificationCard() {
+export default function NotificationCard({ data }) {
   return (
     <div className="group flex items-center gap-4 px-[24px] py-4 cursor-pointer border-b border-red-100 hover:bg-gray-100 transition-all">
       <IoIosNotificationsOutline

@@ -19,8 +19,6 @@ const MyProfile = () => {
 
   const user = useSelector((state) => state.user.user);
 
-  console.log(user);
-
   const profileImage = getImageUrl(user?.image, defaultThumbnail);
 
   const profileData = {

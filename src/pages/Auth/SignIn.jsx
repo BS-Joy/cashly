@@ -1,7 +1,7 @@
 import { Button, Checkbox, Input } from "antd";
 import Form from "antd/es/form/Form";
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import RoundedButton from "../../Components/RoundedButton";
 import { useLoginMutation } from "../../features/user/authSlice";
 import { useDispatch } from "react-redux";
@@ -109,13 +109,13 @@ const SignIn = () => {
             </Form.Item>
             <div className="flex justify-between items-center">
               <Form.Item>
-                <p
-                  onClick={() => navigate("/auth/forgot-password")}
+                <Link
+                  to={"/auth/forgot-password"}
                   // type="link"
                   className="text-base text-black-200 hover:text-black-300 font-medium text-info"
                 >
                   Forget password?
-                </p>
+                </Link>
               </Form.Item>
             </div>
             <div className="w-full flex justify-center ">

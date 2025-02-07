@@ -40,6 +40,7 @@ export const apiSlice = createApi({
     "terms",
     "privacy",
     "trust",
+    "notification",
   ],
   endpoints: (builder) => ({}),
 });

@@ -57,6 +57,10 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
       query: () => "/setting/get-terms",
       providesTags: ["trust"],
     }),
+    getAdminNotifications: builder.query({
+      query: () => "/notification/admin",
+      providesTags: ["notification"],
+    }),
   }),
 });
 
@@ -67,4 +71,5 @@ export const {
   useGetTermsConditionQuery,
   useGetPrivacyPolicyQuery,
   useGetTrustSafetyQuery,
+  useGetAdminNotificationsQuery,
 } = extendedDashboardApiSlice;
