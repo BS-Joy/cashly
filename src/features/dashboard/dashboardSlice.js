@@ -37,7 +37,7 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
     getRecentUser: builder.query({
       query: () => {
         return {
-          url: "/dashboard/get-total-earning",
+          url: "/dashboard/recent-user",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,8 +45,16 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getTermsCondition: builder.query({
+      query: () => "/setting/get-terms",
+      providesTags: ["terms"],
+    }),
   }),
 });
 
-export const { useGetDashboardSummaryQuery, useGetEarningDataForChartQuery } =
-  extendedDashboardApiSlice;
+export const {
+  useGetDashboardSummaryQuery,
+  useGetEarningDataForChartQuery,
+  useGetRecentUserQuery,
+  useGetTermsConditionQuery,
+} = extendedDashboardApiSlice;

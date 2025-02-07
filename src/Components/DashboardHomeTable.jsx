@@ -1,14 +1,24 @@
 import { Table } from "antd";
 import { Link } from "react-router-dom";
 import exlamIcon from "../assets/images/exclamation-circle.png";
+import { useGetRecentUserQuery } from "../features/dashboard/dashboardSlice";
+import LoadingSpinner from "./LoadingSpinner";
 
 const DashboardHomeTable = () => {
+  const {
+    data: recentUsers,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useGetRecentUserQuery();
+
   const columns = [
     {
-      title: "#SI",
-      dataIndex: "transIs",
-      key: "transIs",
-      render: (text) => <a>{text}</a>,
+      title: "#SL",
+      dataIndex: "index",
+      key: "index",
+      render: (_, __, index) => index + 1, // Auto-generate serial number
     },
     {
       title: "Name",
@@ -17,58 +27,84 @@ const DashboardHomeTable = () => {
     },
     {
       title: "Email",
-      dataIndex: "Email",
-      key: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Phone Number",
-      key: "Phone",
-      dataIndex: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Action",
-      key: "Review",
-      aligen: "center",
+      key: "action",
+      align: "center",
       render: (_, data) => (
-        <div className="  items-center justify-around textcenter flex">
-          {/* Review Icon */}
+        <div className="flex items-center justify-around text-center">
           <img
             src={exlamIcon}
-            alt=""
-            className="btn  px-3 py-1 text-sm rounded-full"
+            alt="View Details"
+            className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
+            // onClick={() => showModal(data)}
           />
-          {/* <Link to={'/reviews'} className="btn bg-black text-white px-3 py-1 text-sm rounded-full">
-           
-            View
-          </Link> */}
         </div>
       ),
     },
   ];
 
-  const data = [];
-  for (let index = 0; index < 6; index++) {
-    data.push({
-      transIs: `${index + 1}`,
-      name: "Henry",
-      Email: "sharif@gmail.com",
-      Phone: "+12746478994",
-      Review: "See Review",
-      date: "16 Apr 2024",
-      _id: index,
-    });
+  let pageContent;
+
+  if (isLoading) {
+    pageContent = (
+      <div className="flex justify-center">
+        <LoadingSpinner size={12} color="stroke-primary" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    pageContent = <p className="text-red-500">Something went wrong!</p>;
+  }
+
+  if (isSuccess) {
+    // const filteredBuyers = buyersList.data.result.filter(
+    //   (d) => d.loginStatus === "approved"
+    // );
+
+    if (recentUsers.data.length === 0) {
+      pageContent = (
+        <div className="text-center text-gray-500 mt-4">No buyers found.</div>
+      );
+    } else {
+      pageContent = (
+        <Table
+          columns={columns}
+          dataSource={recentUsers.data.map((item, index) => ({
+            key: item._id,
+            index: index + 1, // SL number
+            name: item.buyer
+              ? `${item.buyer.firstName || ""} ${
+                  item.buyer.lastName || ""
+                }`.trim() || "Not available"
+              : "Not available",
+
+            email: item.email || "Not available",
+            phone: item.phone || "Not available",
+            // transAmount: item.transAmount || "Not available",
+            // subscription: item.subscription || "Not available",
+          }))}
+          pagination={false}
+          className="rounded-lg"
+        />
+      );
+    }
   }
 
   return (
     <div className="rounded-lg border pt-4 border-black mt-8 recent-users-table">
       <h3 className="text-2xl text-black mb-4 pl-2">Recent Users</h3>
       {/* Ant Design Table */}
-      <Table
-        columns={columns}
-        dataSource={data.map((item) => ({ ...item, key: item._id }))}
-        pagination={false}
-        className="rounded-lg"
-      />
+      {pageContent}
     </div>
   );
 };
