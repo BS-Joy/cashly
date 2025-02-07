@@ -1,8 +1,13 @@
 import { Form, Input, Select } from "antd";
 import React from "react";
+import { useCreateAdminMutation } from "../../../features/user/authSlice";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 export default function AddAdminForm({ setIsModalOpen }) {
   const [form] = Form.useForm();
+
+  const [createAmin, { isLoading }] = useCreateAdminMutation();
 
   const validateConfirmPassword = ({ getFieldValue }) => ({
     validator(_, value) {
@@ -15,12 +20,29 @@ export default function AddAdminForm({ setIsModalOpen }) {
     },
   });
 
-  const onFinish = (value) => {
-    const userData = { ...value };
+  const onFinish = async (value) => {
+    const { mobile, confirm_password, ...rest } = value;
 
-    userData.phone = value.mobile;
+    const userData = { ...rest, phone: mobile };
 
-    console.log(userData);
+    try {
+      const res = await createAmin(userData).unwrap();
+
+      if (res?.status === 400) {
+        console.log(res.status);
+        toast.error(res.data.message);
+      }
+
+      if (res?.success) {
+        toast.success("Admin created successfully.");
+        setIsModalOpen(false);
+      }
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message);
+    }
   };
   return (
     <Form
@@ -53,7 +75,7 @@ export default function AddAdminForm({ setIsModalOpen }) {
         {/* first name */}
         <Form.Item
           className="w-full"
-          name="first_name"
+          name="firstName"
           rules={[
             {
               required: true,
@@ -71,7 +93,7 @@ export default function AddAdminForm({ setIsModalOpen }) {
         {/* last name */}
         <Form.Item
           className="w-full"
-          name="last_name"
+          name="lastName"
           rules={[
             {
               required: true,
@@ -154,10 +176,10 @@ export default function AddAdminForm({ setIsModalOpen }) {
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
             options={[
-              { value: "1", label: "Accountant" },
-              { value: "2", label: "Moderator" },
-              { value: "3", label: "Admin" },
-              { value: "4", label: "Staff" },
+              { value: "ADMIN", label: "Admin" },
+              { value: "AGENCY", label: "Agency" },
+              { value: "BUYER", label: "Buyer" },
+              { value: "SUB_USER", label: "Sub User" },
             ]}
             className="min-h-[55px]"
           />
@@ -194,13 +216,16 @@ export default function AddAdminForm({ setIsModalOpen }) {
               required: true,
               message: "Please input password!",
             },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters long!",
+            },
           ]}
         >
           <Input.Password
             size="large"
             placeholder="Password *"
             className="rounded-md bg-white border border-red-400 pl-6"
-            // visibilitytoggle={value.toString()}
           />
         </Form.Item>
 
@@ -214,6 +239,10 @@ export default function AddAdminForm({ setIsModalOpen }) {
               required: true,
               message: "Please input password!",
             },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters long!",
+            },
             validateConfirmPassword({ getFieldValue: form.getFieldValue }),
           ]}
         >
@@ -226,19 +255,25 @@ export default function AddAdminForm({ setIsModalOpen }) {
       </div>
 
       <div className="w-full flex gap-5 justify-center ">
-        <button
-          type="submit"
-          className="border bg-red-700 text-white px-8 py-2 rounded-md border-red-700"
-        >
-          Add User
-        </button>
-        <button
-          type="button"
-          className="border border-red-700 text-red-700 px-10 rounded"
-          onClick={() => setIsModalOpen(false)}
-        >
-          cancel
-        </button>
+        {isLoading ? (
+          <LoadingSpinner size={8} color="stroke-primary" />
+        ) : (
+          <>
+            <button
+              type="submit"
+              className="border bg-red-700 text-white px-8 py-2 rounded-md border-red-700"
+            >
+              Add User
+            </button>
+            <button
+              type="button"
+              className="border border-red-700 text-red-700 px-10 rounded"
+              onClick={() => setIsModalOpen(false)}
+            >
+              cancel
+            </button>
+          </>
+        )}
       </div>
     </Form>
   );

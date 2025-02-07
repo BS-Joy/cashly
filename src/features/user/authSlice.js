@@ -48,4 +48,5 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useGetAllAdminQuery } = extendedAuthApiSlice;
+export const { useLoginMutation, useGetAllAdminQuery, useCreateAdminMutation } =
+  extendedAuthApiSlice;

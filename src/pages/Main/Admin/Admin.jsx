@@ -51,21 +51,21 @@ const Admin = () => {
       dataIndex: "phone",
       key: "phone",
     },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   align: "center",
-    //   render: (_, data) => (
-    //     <div className="flex items-center justify-around text-center">
-    //       <img
-    //         src={exlamIcon}
-    //         alt="View Details"
-    //         className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
-    //         onClick={() => showModal(data)}
-    //       />
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, data) => (
+        <div className="flex items-center justify-around text-center">
+          <img
+            src={exlamIcon}
+            alt="View Details"
+            className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
+            // onClick={() => showModal(data)}
+          />
+        </div>
+      ),
+    },
   ];
 
   let pageContent;

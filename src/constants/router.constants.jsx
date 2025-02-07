@@ -27,7 +27,6 @@ import TrainerPost from "../pages/Main/ApproveRequest/TrainerPost";
 import Review from "../pages/Main/Buyers/Review";
 import StudioList from "../pages/Main/StudioList/StudioList";
 import TrainerList from "../pages/Main/TrainerList/TrainerList";
-import Earnings from "../pages/Main/Agency/Agency";
 import Driver from "../pages/Main/Admin/Admin";
 import BuyerRequest from "../pages/Main/BuyerRequest/BuyerRequest";
 import Setting from "../pages/Main/Setting/Setting";
@@ -74,103 +73,103 @@ export const dashboardItems = [
     name: "Buyer",
     path: "buyers",
     icon: TbUserDollar,
-    element: <Buyers />,
+    element: (
+      <PrivateProtectedRoute>
+        <Buyers />
+      </PrivateProtectedRoute>
+    ),
   },
   {
     name: "Buyer Requests",
     path: "buyer-requests",
     icon: FiUserPlus,
-    element: <BuyerRequest />,
+    element: (
+      <PrivateProtectedRoute>
+        <BuyerRequest />
+      </PrivateProtectedRoute>
+    ),
   },
-  // {
-  //   name: "Approve Request",
-  //   rootPath: "approveRequest",
-  //   icon: GrMoney,
-  //   children: [
-  //     {
-  //       name: "Studio Post",
-  //       path: "approveRequest/all-earnings",
-  //       icon: LuWallet,
-  //       element: <StudioPost />,
-  //     },
-  //     {
-  //       name: "Trainer Post",
-  //       path: "approveRequest/withdraw",
-  //       icon: PiHandWithdrawBold,
-  //       element: <TrainerPost />,
-  //     },
-  //   ],
-  // },
   {
     path: "notifications",
-    element: <Notifications />,
+    element: (
+      <PrivateProtectedRoute>
+        <Notifications />
+      </PrivateProtectedRoute>
+    ),
   },
-  // {
-  //   path: '/reviews',
-  //   element: <Review></Review>
-  // },
 
   {
     name: "Agency",
     path: "agency",
     icon: TbHomeDollar,
-    element: <Earnings />,
+    element: (
+      <PrivateProtectedRoute>
+        <Agency />
+      </PrivateProtectedRoute>
+    ),
   },
   {
     name: "Agency Requests",
     path: "agency-requests",
     icon: MdOutlineAddHome,
-    element: <AgencyRequest />,
+    element: (
+      <PrivateProtectedRoute>
+        <AgencyRequest />
+      </PrivateProtectedRoute>
+    ),
   },
   {
     name: "Add Admin",
     path: "admins",
     icon: GrUserSettings,
-    element: <Admin />,
+    element: (
+      <PrivateProtectedRoute>
+        <Admin />
+      </PrivateProtectedRoute>
+    ),
   },
   {
     name: "Subscription",
     path: "subscription",
     icon: TbCalendarDollar,
-    element: <Subscription />,
+    element: (
+      <PrivateProtectedRoute>
+        <Subscription />
+      </PrivateProtectedRoute>
+    ),
     children: [
       {
         name: "Edit-Subscription",
         path: "subscription/edit-subscription",
         icon: TbCalendarDollar,
-        element: <EditSubscription />,
+        element: (
+          <PrivateProtectedRoute>
+            <EditSubscription />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         name: "Add-Subscription",
         path: "subscription/add-subscription",
         icon: TbCalendarDollar,
-        element: <AddSubscription />,
+        element: (
+          <PrivateProtectedRoute>
+            <AddSubscription />
+          </PrivateProtectedRoute>
+        ),
       },
     ],
   },
-
-  // {
-  //   name: "Subscription",
-  //   rootPath: "subscription",
-  //   icon: MdOutlineSubscriptions,
-  //   children: [
-  //     {
-  //       name: "Edit Subscription",
-  //       path: "subscription/edit-subscription",
-  //       element: <EditSubscription />,
-  //     },
-  //   ],
-  // },
   {
     name: "Settings",
     path: "settings",
     icon: IoSettingsOutline,
-    element: <Setting />,
+    element: (
+      <PrivateProtectedRoute>
+        <Setting />
+      </PrivateProtectedRoute>
+    ),
   },
-  // {
-  //   path: "/hosts/:id",
-  //   element: <HostDetails />,
-  // },
   {
     name: "Settings",
     rootPath: "settings",
@@ -180,59 +179,107 @@ export const dashboardItems = [
         name: "Personal Information",
         path: "settings/profile",
         icon: CiUser,
-        element: <MyProfile />,
+        element: (
+          <PrivateProtectedRoute>
+            <MyProfile />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/profile/edit",
-        element: <EditMyProfile />,
+        element: (
+          <PrivateProtectedRoute>
+            <EditMyProfile />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         name: "Change Password",
         icon: FaServicestack,
         path: "settings/change-password",
-        element: <ChangePassword />,
+        element: (
+          <PrivateProtectedRoute>
+            <ChangePassword />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/change-password/forgot-password",
-        element: <ForgotPassword />,
+        element: (
+          <PrivateProtectedRoute>
+            <ForgotPassword />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/change-password/forgot-password/verify-email",
-        element: <VerifyEmail />,
+        element: (
+          <PrivateProtectedRoute>
+            <VerifyEmail />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/change-password/forgot-password/verify-email/reset-password",
-        element: <ResetPassword />,
+        element: (
+          <PrivateProtectedRoute>
+            <ResetPassword />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         name: "Terms & Condition",
         icon: FaServicestack,
         path: "settings/terms-conditions",
-        element: <TermsConditions />,
+        element: (
+          <PrivateProtectedRoute>
+            <TermsConditions />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/terms-conditions/edit",
-        element: <EditTermsConditions />,
+        element: (
+          <PrivateProtectedRoute>
+            <EditTermsConditions />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         name: "Privacy Policy",
         icon: MdOutlineSecurityUpdateWarning,
         path: "settings/privacy-policy",
-        element: <PrivacyPolicy />,
+        element: (
+          <PrivateProtectedRoute>
+            <PrivacyPolicy />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/privacy-policy/edit",
-        element: <EditPrivacyPolicy />,
+        element: (
+          <PrivateProtectedRoute>
+            <EditPrivacyPolicy />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         name: "Trust & Safety",
         icon: BiMessageSquareDetail,
         path: "settings/trust-safety",
-        element: <Trust />,
+        element: (
+          <PrivateProtectedRoute>
+            <Trust />
+          </PrivateProtectedRoute>
+        ),
       },
       {
         path: "settings/trust-safety/edit",
-        element: <EditTrust />,
+        element: (
+          <PrivateProtectedRoute>
+            <EditTrust />
+          </PrivateProtectedRoute>
+        ),
       },
     ],
   },
