@@ -36,7 +36,6 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         return [{ type: "admin", id: "LIST" }];
       },
     }),
-
     createAdmin: builder.mutation({
       query: (adminData) => ({
         url: "admin/create-admin",
@@ -45,8 +44,19 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: () => [{ type: "admin", id: "LIST" }],
     }),
+    updateAdminProfile: builder.mutation({
+      query: (updatedUserData) => ({
+        url: "/user/update-profile",
+        method: "PATCH",
+        body: updatedUserData,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetAllAdminQuery, useCreateAdminMutation } =
-  extendedAuthApiSlice;
+export const {
+  useLoginMutation,
+  useGetAllAdminQuery,
+  useCreateAdminMutation,
+  useUpdateAdminProfileMutation,
+} = extendedAuthApiSlice;

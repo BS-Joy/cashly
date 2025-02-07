@@ -8,24 +8,31 @@ import PageHeading from "../../Components/PageHeading";
 import PasswordChangeModalForm from "../../Components/User/PasswordChangeModalForm";
 import { FaAngleLeft } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
+import { useSelector } from "react-redux";
+import { getImageUrl } from "../../utils/getImageUrl";
+
+const defaultThumbnail =
+  "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
 
 const MyProfile = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const user = useSelector((state) => state.user.user);
+
+  console.log(user);
+
+  const profileImage = getImageUrl(user?.image, defaultThumbnail);
 
   const profileData = {
-    name: "Jane Kooper",
-    email: "enrique@gmail.com",
-    phone: "+880 1550597212",
-    profile: dashProfile,
+    name: user?.firstName + user?.lastName || "Not found",
+    email: user?.email || "Not found",
+    phone: user?.phone,
+    profileImage,
   };
-  // console.log(code);
   return (
     <>
       <div className="flex items-center gap-2 text-xl">
-        <FaAngleLeft />
-        <h1>Personal information</h1>
-        <PageHeading />
+        <PageHeading title={"Personal information"} backPath={-1} />
       </div>
       <div className="rounded-lg py-4 border-[#f8f8f8] bg-[#f1f1f1] border-2 shadow-lg mt-8">
         <h3 className="text-2xl text-black mb-4 pl-5 border-b-2 border-lightGray/40 pb-3">
@@ -38,10 +45,10 @@ const MyProfile = () => {
               <div className="py-4 px-8 flex justify-end items-center">
                 {/* <h6 className="text-2xl text-white">Personal Information</h6> */}
                 <button
-                  onClick={(e) => navigate(`edit`)}
+                  onClick={() => navigate(`edit`)}
                   // size="large"
                   // type="default"
-                  className="py-5 px-6 bg-white text-red-700 border border-red-700 rounded-md font-semibold flex gap-2 items-center"
+                  className="py-5 px-6 bg-white shadow-md text-red-700 border border-red-700 rounded-md font-semibold flex gap-2 items-center"
                 >
                   <GoPencil />
                   Edit Profile
@@ -63,9 +70,10 @@ const MyProfile = () => {
                   <div className="min-h-[300px] flex flex-col items-center justify-center p-8 border border-red-400 rounded-md bg-lightGray/15">
                     <div className="my-2">
                       <img
-                        src={dashProfile}
-                        alt=""
-                        className="h-28 w-28 rounded-full border-4 border-black"
+                        src={profileData?.profileImage}
+                        alt="user profile picture"
+                        onError={(e) => (e.target.src = defaultThumbnail)}
+                        className="h-28 w-28 rounded-full border-[3px] border-red-400"
                       />
                     </div>
                     <h5 className="text-lg text-[#222222]">{"Profile"}</h5>
@@ -110,14 +118,7 @@ const MyProfile = () => {
                 </div>
               </Form>
             </div>
-            <PasswordChangeModalForm
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-            />
           </div>
-        </div>
-        <div className="p-[24px] pt-0.5">
-          <Outlet />
         </div>
       </div>
     </>

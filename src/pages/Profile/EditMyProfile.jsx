@@ -1,37 +1,91 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Form, Input } from "antd";
-import dashProfile from "../../assets/images/dashboard-profile.png";
-// import "react-phone-number-input/style.css";
-// import PhoneInput from "react-phone-number-input";
 import { FiEdit } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import PhoneCountryInput from "../../Components/PhoneCountryInput";
 import PageHeading from "../../Components/PageHeading";
-import { PiCameraPlus } from "react-icons/pi";
-import { FaAngleLeft } from "react-icons/fa6";
+import { MdCameraAlt } from "react-icons/md";
+import { getImageUrl } from "../../utils/getImageUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { useUpdateAdminProfileMutation } from "../../features/user/authSlice";
+import LoadingSpinner from "../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
+import { Cookies } from "react-cookie";
+import { setUser } from "../../features/user/userSlice";
+
+const defaultThumbnail =
+  "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
 
 const EditMyProfile = () => {
-  const [code, setCode] = useState();
+  const cookies = new Cookies();
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const imageInputRef = useRef();
+  const dispatch = useDispatch();
+
+  const [image, setImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const [updateProfile, { isLoading }] = useUpdateAdminProfileMutation();
+
+  const user = useSelector((state) => state.user.user);
+  const profileImage = getImageUrl(user?.image, defaultThumbnail);
+
+  const onFinish = async (values) => {
+    const updatedData = { ...values };
+
+    if (image) {
+      updatedData.image = image;
+    }
+
+    // Create a new FormData instance
+    const formData = new FormData();
+
+    // Append each field to the FormData
+    Object.keys(updatedData).forEach((key) => {
+      formData.append(key, updatedData[key]);
+    });
+
+    try {
+      const res = await updateProfile(formData);
+
+      if (res.data?.success) {
+        toast.success("Profile updated successfully.");
+        cookies.remove("user_profile");
+        cookies.set("user_profile", res.data?.data);
+        dispatch(setUser(res.data?.data));
+        navigate(-1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+
+  const handleImageUpload = () => {
+    if (imageInputRef.current) {
+      imageInputRef.current.click();
+    }
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const selectedImageUrl = URL.createObjectURL(file);
+    if (file) {
+      setSelectedImage(selectedImageUrl);
+      setImage(file);
+    }
+  };
+
   const profileData = {
-    name: "Jane Kooper",
-    email: "enrique@gmail.com",
-    phone: "+880 150597212",
-    profile: dashProfile,
+    firstName: user?.firstName || "Not found",
+    lastName: user?.lastName || "Not found",
+    email: user?.email || "Not found",
+    phone: user?.phone,
+    profileImage,
   };
-  // console.log(code);
 
   return (
     <>
       <div className="flex items-center gap-2 text-xl">
-        <FaAngleLeft />
-        <h1>Personal information</h1>
+        <PageHeading title={"Edit Personal information"} backPath={-1} />
       </div>
       <div className="rounded-lg py-4 border-[#f8f8f8] bg-[#f1f1f1] border-2 shadow-lg mt-8 ">
         <div className="space-y-[24px] min-h-[83vh] bg-light-gray rounded-2xl">
@@ -44,22 +98,39 @@ const EditMyProfile = () => {
               layout="vertical"
               className="w-full grid grid-cols-12 gap-x-10 px-14 py-8"
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
               autoComplete="off"
               initialValues={{
-                name: profileData.name,
+                firstName: profileData.firstName,
+                lastName: profileData.lastName,
                 email: profileData.email,
                 phone: profileData.phone,
+                image: profileData.image,
               }}
             >
               <div className="col-span-3 space-y-6 ">
                 <div className="min-h-[300px] flex flex-col items-center justify-center p-8 border border-red-400 rounded-md bg-lightGray/15">
-                  <div className="my-2">
+                  <div className="my-2 relative group">
                     <img
-                      src={dashProfile}
+                      src={selectedImage || profileData.profileImage}
+                      onError={(e) => (e.target.src = defaultThumbnail)}
                       alt="profile picture"
                       className="h-28 w-28 rounded-full border-4 border-black"
                     />
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={imageInputRef}
+                      name="image"
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
+                    />
+                    <div
+                      className="absolute top-0 h-28 w-28 rounded-full hidden group-hover:flex justify-center items-center bg-[#00000080] cursor-pointer"
+                      onClick={handleImageUpload}
+                    >
+                      <MdCameraAlt color="white" size={30} />
+                    </div>
                   </div>
                   <h5 className="text-lg text-[#222222]">{"Profile"}</h5>
                   <h4 className="text-2xl text-[#222222]">{"Admin"}</h4>
@@ -68,46 +139,44 @@ const EditMyProfile = () => {
               <div className="col-span-9 space-y-[14px] w-full">
                 <Form.Item
                   className="text-lg  font-medium text-black -mb-1"
-                  label="Name"
-                  name="name"
+                  label="First Name"
+                  name="firstName"
                 >
-                  <Input
-                    readOnly
-                    size="large"
-                    className="h-[53px] rounded-lg"
-                  />
+                  <Input size="large" className="h-[53px] rounded-lg" />
+                </Form.Item>
+                <Form.Item
+                  className="text-lg  font-medium text-black -mb-1"
+                  label="Last Name"
+                  name="lastName"
+                >
+                  <Input size="large" className="h-[53px] rounded-lg" />
                 </Form.Item>
                 <Form.Item
                   className="text-lg  font-medium text-black"
                   label="Email"
                   name="email"
                 >
-                  <Input
-                    readOnly
-                    size="large"
-                    className="h-[53px] rounded-lg"
-                  />
+                  <Input size="large" className="h-[53px] rounded-lg" />
                 </Form.Item>
                 <Form.Item
                   className="text-lg text-[#222222] font-medium"
                   label="Phone Number"
                   name="phone"
                 >
-                  <Input
-                    readOnly
-                    size="large"
-                    className="h-[53px] rounded-lg"
-                  />
+                  <Input size="large" className="h-[53px] rounded-lg" />
                 </Form.Item>
                 <Form.Item className="flex justify-end pt-4">
-                  <Button
-                    // onClick={(e) => navigate(`edit`)}
-                    size="large"
-                    type="primary"
-                    className="px-8 bg-red-700 text-white hover:bg-black/90 rounded-lg font-semibold"
+                  <button
+                    disabled={isLoading}
+                    type="submit"
+                    className="border bg-red-700 text-white px-8 py-3 font-lora rounded-md border-red-700"
                   >
-                    Save Changes
-                  </Button>
+                    {isLoading ? (
+                      <LoadingSpinner size={5} color="stroke-white" />
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </button>
                 </Form.Item>
               </div>
             </Form>

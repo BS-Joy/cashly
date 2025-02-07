@@ -86,6 +86,10 @@
   /* Darker thumb when hovered */
 }
 
+.ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: #b41b1b;
+}
+
 /* recent-users-table header backgroundColor */
 .recent-users-table .ant-table-thead>tr>th {
   background: #9C1B1B;
