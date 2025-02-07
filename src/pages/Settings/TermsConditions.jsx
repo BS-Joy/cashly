@@ -18,73 +18,6 @@ const TermsConditions = () => {
             Terms & Condition
           </h3>
           <div className="w-full px-16">
-            {/* <Form
-              name="basic"
-              layout="vertical"
-              className="w-full grid grid-cols-12 gap-x-10 px-14 py-8"
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              initialValues={{
-                name: profileData.name,
-                email: profileData.email,
-              }}
-            >
-              <div className="col-span-3 space-y-6 ">
-                <div className="min-h-[300px] flex flex-col items-center justify-center p-8 border border-black bg-lightGray/15">
-                  <div className="my-2">
-                    <img
-                      src={dashProfile}
-                      alt=""
-                      className="h-28 w-28 rounded-full border-4 border-black"
-                    />
-                  </div>
-                  <h5 className="text-lg text-[#222222]">{"Profile"}</h5>
-                  <h4 className="text-2xl text-[#222222]">{"Admin"}</h4>
-                </div>
-              </div>
-              <div className="col-span-9 space-y-[24px] w-full">
-                <Form.Item
-                  className="text-lg  font-medium text-black"
-                  label="Name"
-                  name="name"
-                >
-                  <Input
-                    readOnly
-                    size="large"
-                    className="h-[56px] rounded-lg"
-                  />
-                </Form.Item>
-                <Form.Item
-                  className="text-lg  font-medium text-black"
-                  label="Email"
-                  name="email"
-                >
-                  <Input
-                    readOnly
-                    size="large"
-                    className="h-[56px] rounded-lg"
-                  />
-                </Form.Item>
-                <Form.Item
-                  className="text-lg text-[#222222] font-medium"
-                  label="Phone Number"
-                  name="phone"
-                >
-                  <PhoneCountryInput />
-                </Form.Item>
-                <Form.Item className="flex justify-end pt-4">
-                  <Button
-                    // onClick={(e) => navigate(`edit`)}
-                    size="large"
-                    type="primary"
-                    className="px-8 bg-black text-white hover:bg-black/90 rounded-full font-semibold"
-                  >
-                    Save Changes
-                  </Button>
-                </Form.Item>
-              </div>
-            </Form> */}
             <div className="space-y-5 text-black text-sm">
               <h1>
                 Lorem ipsum dolor sit amet consectetur. Fringilla a cras vitae
@@ -149,9 +82,7 @@ const TermsConditions = () => {
             </div>
             <div className="flex justify-end pt-4">
               <button
-                onClick={(e) => navigate(`edit`)}
-                // size="large"
-                // type="primary"
+                onClick={() => navigate(`edit`)}
                 className="px-8 py-4 bg-red-700 text-white hover:bg-black/90 rounded-full font-semibold w-1/4"
               >
                 Edit

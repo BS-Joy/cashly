@@ -49,7 +49,7 @@ const Header = () => {
     <div className="w-full h-[88px] flex justify-between items-center rounded-xl py-[16px] px-[32px] shadow-lg bg-white">
       <div className="text-start space-y-0.5">
         <p className="text-sm md:text-2xl font-light leading-[30px]">
-          {"Welcome, Jane Cooper"}
+          {`Welcome, ${user?.firstName + " " + user?.lastName}`}
         </p>
         <p className="text-sm md:text-base leading-5">{"Have a nice day"}</p>
       </div>

@@ -237,23 +237,23 @@
 .ql-toolbar.ql-snow {
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid #888787;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  /* border: 1px solid #888787; */
   padding: 5px;
-  width: 35%;
+  width: 40%;
   /* margin: 0 auto;  */
   box-sizing: border-box;
   border-radius: 8px;
   background-color: #E35151;
+  color: white;
   /* Ensure padding is included in width calculation */
 }
 
-/* .custom-quill-editor {
-  
-} */
-
 /* Separate Toolbar Groups with Borders */
 .ql-toolbar.ql-snow .ql-formats {
-  border-right: 1px solid #474747;
+  border-right: 1px solid #959393;
   padding-right: 8px;
   margin-right: 8px;
 }
@@ -266,12 +266,10 @@
 /* Quill Editor Wrapper */
 .ql-container.ql-snow {
   border: none !important;
-  /* Ensure the toolbar and editor appear as a single unit */
 }
 
 .ql-toolbar .ql-picker.ql-size {
   width: auto;
-  /* Ensure the dropdown can expand */
 }
 
 .ql-toolbar .ql-picker-options {
@@ -295,36 +293,23 @@
   /* font-size: 18px !important; */
 }
 
-.ql-picker-label,
-.ql-snow .ql-stroke {
-  color: white;
-  stroke: white !important;
-}
-
-.ql-snow .ql-fill,
-.ql-snow .ql-stroke.ql-fill {
-  fill: white !important;
-}
-
 /* Custom label for the selected value */
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before {
   content: "14";
-  font-size: 14px !important;
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before {
   content: "16";
-  /* font-size: 16px !important; */
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before {
   content: "18";
-  /* font-size: 18px !important; */
 }
 
 /* font size dropdown width reducing */
 .ql-snow .ql-picker.ql-size .ql-picker-label {
   width: 50px;
+  color: white;
 }
 
 .ql-snow .ql-picker.ql-size {
@@ -341,6 +326,8 @@
   gap: 5px;
   /* Space between "T" and the circle */
   margin-left: -13px;
+  /* background-color: red; */
+  width: 35px;
 }
 
 /* Override the default label of the color picker */
@@ -350,23 +337,20 @@
   font-weight: bold;
   font-size: 13px;
   /* margin-right: 5px; */
-  color: inherit;
+  color: white;
   /* Reflect the selected text color */
 }
 
-/* Add a circle beside "T" that changes color dynamically */
+/* Add a color-indicator circle beside "T" */
 .ql-snow .ql-picker.ql-color .ql-picker-label::after {
   content: "";
   display: inline-block;
-  width: 35px;
-  height: 10px;
-  /* margin-left: 5px; */
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  /* Makes it a circle */
-  background-color: currentColor;
-  /* Matches the selected color */
+  background-color: var(--selected-color, #000);
+  /* Default color */
   border: 1px solid #000;
-  /* Optional border for visibility */
 }
 
 /* Customize color picker dropdown items as circles */
@@ -390,6 +374,14 @@
 .ql-snow .ql-picker.ql-color .ql-picker-label svg {
   display: none;
   /* Hides the "A" SVG */
+}
+
+.ql-stroke {
+  stroke: white !important;
+}
+
+.ql-snow .ql-fill {
+  fill: white !important;
 }
 
 /* Style the alignment buttons */
@@ -420,10 +412,6 @@
 } */
 
 .custom-quill-editor {
-  /* min-height: 220px; */
-  /* You can set a minimum height */
-  max-height: none;
-  /* Allow the editor to grow */
-  overflow-y: auto;
-  /* Enable vertical scrolling if necessary */
+  height: 800px;
+  position: relative;
 }
