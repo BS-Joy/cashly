@@ -49,6 +49,14 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
       query: () => "/setting/get-terms",
       providesTags: ["terms"],
     }),
+    getPrivacyPolicy: builder.query({
+      query: () => "/setting/get-privacy",
+      providesTags: ["privacy"],
+    }),
+    getTrustSafety: builder.query({
+      query: () => "/setting/get-terms",
+      providesTags: ["trust"],
+    }),
   }),
 });
 
@@ -57,4 +65,6 @@ export const {
   useGetEarningDataForChartQuery,
   useGetRecentUserQuery,
   useGetTermsConditionQuery,
+  useGetPrivacyPolicyQuery,
+  useGetTrustSafetyQuery,
 } = extendedDashboardApiSlice;
