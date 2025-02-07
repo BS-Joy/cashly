@@ -8,8 +8,12 @@ const Trust = () => {
   return (
     <>
       <div className="flex items-center gap-2 text-xl">
-        <FaAngleLeft />
-        <h1>Trust & Safety</h1>
+        <button onClick={() => navigate(-1)}>
+          <FaAngleLeft className="" />
+        </button>
+        <h1 className="text-[26px] font-semibold text-grey-800">
+          Trust & Safety{" "}
+        </h1>
       </div>
       <div className="rounded-lg py-4 border-[#f8f8f8] bg-[#f1f1f1] border-2 shadow-lg mt-8">
         <div className="space-y-[24px] min-h-[83vh] bg-light-gray rounded-2xl">

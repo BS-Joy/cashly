@@ -79,7 +79,7 @@ const EditPrivacyPolicy = () => {
     <>
       <div className="flex items-center gap-2 text-xl">
         <button onClick={() => navigate(-1)}>
-          <FaAngleLeft className="relative bottom-1" />
+          <FaAngleLeft className="" />
         </button>
         <h1 className="text-[26px] font-semibold text-grey-800">
           Privacy & Policy Edit{" "}
