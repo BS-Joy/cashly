@@ -61,6 +61,14 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
       query: () => "/setting/get-privacy",
       providesTags: ["privacy"],
     }),
+    createUpdatePrivacy: builder.mutation({
+      query: (updatedPrivacy) => ({
+        url: "/setting/create-privacy",
+        method: "POST",
+        body: updatedPrivacy,
+      }),
+      invalidatesTags: ["privacy"],
+    }),
     getTrustSafety: builder.query({
       query: () => "/setting/get-terms",
       providesTags: ["trust"],
@@ -81,4 +89,5 @@ export const {
   useGetTrustSafetyQuery,
   useGetAdminNotificationsQuery,
   useCreateUpdateTermsMutation,
+  useCreateUpdatePrivacyMutation,
 } = extendedDashboardApiSlice;

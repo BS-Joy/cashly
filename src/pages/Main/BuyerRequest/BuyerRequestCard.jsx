@@ -43,7 +43,7 @@ export default function BuyerRequestCard({ item }) {
     });
   };
   return (
-    <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2">
+    <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2 flex flex-col justify-between">
       <div className="flex items-center justify-center flex-col">
         <img
           src={buyerImage}
@@ -104,7 +104,9 @@ export default function BuyerRequestCard({ item }) {
             </div>
           )}
 
-          {!docImages && !docPdf ? "No documents found" : ""}
+          {docImages?.length < 1 && (!docPdf || docPdf?.length < 1)
+            ? "No documents found"
+            : ""}
         </div>
       </div>
       <div className="flex items-center justify-center gap-1">

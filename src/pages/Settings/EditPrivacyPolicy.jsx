@@ -6,8 +6,12 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import Quill from "quill";
-import { useGetPrivacyPolicyQuery } from "../../features/dashboard/dashboardSlice";
+import {
+  useCreateUpdatePrivacyMutation,
+  useGetPrivacyPolicyQuery,
+} from "../../features/dashboard/dashboardSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 // Import 'size' style attributor
 const Size = Quill.import("attributors/style/size");
@@ -51,6 +55,9 @@ const EditPrivacyPolicy = () => {
     useGetPrivacyPolicyQuery();
   const [content, setContent] = useState(data?.data?.description || "");
 
+  const [updatePrivacy, { isLoading: updateLoading }] =
+    useCreateUpdatePrivacyMutation();
+
   useEffect(() => {
     if (isSuccess && data?.data?.description) {
       setContent(data.data.description);
@@ -71,7 +78,7 @@ const EditPrivacyPolicy = () => {
       }
     };
 
-    quillContainer.addEventListener("click", (event) => {
+    const handleToolbarClick = (event) => {
       const target = event.target.closest(
         ".ql-color .ql-picker-options [data-value]"
       );
@@ -79,12 +86,27 @@ const EditPrivacyPolicy = () => {
         const selectedColor = target.getAttribute("data-value");
         updateColorIndicator(selectedColor);
       }
-    });
+    };
+
+    quillContainer.addEventListener("click", handleToolbarClick);
 
     return () => {
-      quillContainer.removeEventListener("click", () => {}); // Cleanup event listener
+      quillContainer.removeEventListener("click", handleToolbarClick); // Cleanup event listener
     };
   }, []);
+
+  const handleNewUpdate = async () => {
+    try {
+      const res = await updatePrivacy({ description: content }).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        navigate(-1);
+      }
+    } catch (error) {
+      toast.error("Something went wrong during privacy policy update!");
+    }
+  };
 
   let privacyPolicy;
 
@@ -94,13 +116,9 @@ const EditPrivacyPolicy = () => {
         <LoadingSpinner size={12} color="stroke-primary" />
       </div>
     );
-  }
-
-  if (isError) {
+  } else if (isError) {
     privacyPolicy = <p className="text-red-500">Something went wrong!</p>;
-  }
-
-  if (isSuccess) {
+  } else if (isSuccess) {
     privacyPolicy = (
       <div className="h-full rounded-md">
         <div className="ql-toolbar-container border border-[#DD3663] rounded-lg max-h-[400px] overflow-y-auto">
@@ -136,10 +154,15 @@ const EditPrivacyPolicy = () => {
           <div className="w-full px-16">{privacyPolicy}</div>
           <div className="flex justify-end pt-8 pr-16">
             <button
-              // onClick={(e) => navigate(`edit`)}
+              onClick={handleNewUpdate}
+              disabled={updateLoading}
               className="px-8 py-4 bg-red-700 text-white hover:bg-red-900 rounded-full font-semibold w-1/4"
             >
-              Update
+              {updateLoading ? (
+                <LoadingSpinner size={5} color="stroke-white" />
+              ) : (
+                "Update"
+              )}
             </button>
           </div>
         </div>

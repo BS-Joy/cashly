@@ -4,6 +4,7 @@ import PageHeading from "../../Components/PageHeading";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useGetPrivacyPolicyQuery } from "../../features/dashboard/dashboardSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
+import DomPurify from "dompurify";
 
 const PrivacyPolicy = () => {
   const navigate = useNavigate();
@@ -18,16 +19,18 @@ const PrivacyPolicy = () => {
         <LoadingSpinner size={12} color="stroke-primary" />
       </div>
     );
-  }
-
-  if (isError) {
+  } else if (isError) {
     privacyPolicy = <p className="text-red-500">Something went wrong!</p>;
-  }
-
-  if (isSuccess) {
+  } else if (isSuccess) {
     privacyPolicy = (
       <div className="space-y-5 text-black text-sm">
-        <p>{data?.data?.description || "No terms and condition"}</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: DomPurify.sanitize(
+              data?.data?.description || "No Privacy plicy."
+            ),
+          }}
+        ></p>
       </div>
     );
   }

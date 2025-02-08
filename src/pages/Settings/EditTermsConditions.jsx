@@ -55,14 +55,8 @@ const EditTermsConditions = () => {
     useGetTermsConditionQuery();
   const [content, setContent] = useState(data?.data?.description || "");
 
-  const [
-    updateTerms,
-    {
-      isLoading: updateLoading,
-      isError: isUpdateError,
-      isSuccess: updateSuccess,
-    },
-  ] = useCreateUpdateTermsMutation();
+  const [updateTerms, { isLoading: updateLoading }] =
+    useCreateUpdateTermsMutation();
 
   useEffect(() => {
     if (isSuccess && data?.data?.description) {
@@ -122,13 +116,9 @@ const EditTermsConditions = () => {
         <LoadingSpinner size={12} color="stroke-primary" />
       </div>
     );
-  }
-
-  if (isError) {
+  } else if (isError) {
     termsCondition = <p className="text-red-500">Something went wrong!</p>;
-  }
-
-  if (isSuccess) {
+  } else if (isSuccess) {
     termsCondition = (
       <div className="h-full rounded-md">
         <div className="ql-toolbar-container border border-[#DD3663] rounded-lg max-h-[400px] overflow-y-auto">
@@ -165,6 +155,7 @@ const EditTermsConditions = () => {
           <div className="flex justify-end pt-8 pr-16">
             <button
               onClick={handleNewUpdate}
+              disabled={updateLoading}
               className="px-8 py-4 bg-red-700 text-white hover:bg-red-900 rounded-full font-semibold w-1/4"
             >
               {updateLoading ? (

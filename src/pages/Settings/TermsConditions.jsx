@@ -19,13 +19,9 @@ const TermsConditions = () => {
         <LoadingSpinner size={12} color="stroke-primary" />
       </div>
     );
-  }
-
-  if (isError) {
+  } else if (isError) {
     termsCondition = <p className="text-red-500">Something went wrong!</p>;
-  }
-
-  if (isSuccess) {
+  } else if (isSuccess) {
     termsCondition = (
       <div className="space-y-5 text-black text-sm">
         <p
