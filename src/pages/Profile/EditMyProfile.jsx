@@ -55,7 +55,9 @@ const EditMyProfile = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(
+        "Something went wrong during profile update. try again please."
+      );
     }
   };
 

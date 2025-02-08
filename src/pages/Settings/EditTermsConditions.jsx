@@ -6,8 +6,12 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import Quill from "quill";
-import { useGetTermsConditionQuery } from "../../features/dashboard/dashboardSlice";
+import {
+  useCreateUpdateTermsMutation,
+  useGetTermsConditionQuery,
+} from "../../features/dashboard/dashboardSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 // Import 'size' style attributor
 const Size = Quill.import("attributors/style/size");
@@ -51,6 +55,15 @@ const EditTermsConditions = () => {
     useGetTermsConditionQuery();
   const [content, setContent] = useState(data?.data?.description || "");
 
+  const [
+    updateTerms,
+    {
+      isLoading: updateLoading,
+      isError: isUpdateError,
+      isSuccess: updateSuccess,
+    },
+  ] = useCreateUpdateTermsMutation();
+
   useEffect(() => {
     if (isSuccess && data?.data?.description) {
       setContent(data.data.description);
@@ -71,7 +84,7 @@ const EditTermsConditions = () => {
       }
     };
 
-    quillContainer.addEventListener("click", (event) => {
+    const handleToolbarClick = (event) => {
       const target = event.target.closest(
         ".ql-color .ql-picker-options [data-value]"
       );
@@ -79,12 +92,27 @@ const EditTermsConditions = () => {
         const selectedColor = target.getAttribute("data-value");
         updateColorIndicator(selectedColor);
       }
-    });
+    };
+
+    quillContainer.addEventListener("click", handleToolbarClick);
 
     return () => {
-      quillContainer.removeEventListener("click", () => {}); // Cleanup event listener
+      quillContainer.removeEventListener("click", handleToolbarClick); // Cleanup event listener
     };
   }, []);
+
+  const handleNewUpdate = async () => {
+    try {
+      const res = await updateTerms({ description: content }).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        navigate(-1);
+      }
+    } catch (error) {
+      toast.error("Something went wrong during terms update!");
+    }
+  };
 
   let termsCondition;
 
@@ -136,10 +164,14 @@ const EditTermsConditions = () => {
           <div className="w-full px-16">{termsCondition}</div>
           <div className="flex justify-end pt-8 pr-16">
             <button
-              // onClick={(e) => navigate(`edit`)}
+              onClick={handleNewUpdate}
               className="px-8 py-4 bg-red-700 text-white hover:bg-red-900 rounded-full font-semibold w-1/4"
             >
-              Update
+              {updateLoading ? (
+                <LoadingSpinner size={5} color="stroke-white" />
+              ) : (
+                "Update"
+              )}
             </button>
           </div>
         </div>

@@ -40,10 +40,6 @@ const Header = () => {
 
   const profileImage = getImageUrl(user?.image, defaultThumbnail);
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (

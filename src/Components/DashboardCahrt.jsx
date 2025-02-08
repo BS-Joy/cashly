@@ -68,6 +68,7 @@ const DashboardChart = () => {
       earn: 840,
     },
   ];
+
   return (
     <div className="bg-white rounded-lg py-8 drop-shadow-sm">
       <div className="flex justify-between items-center px-6 mb-14">
@@ -99,7 +100,6 @@ const DashboardChart = () => {
             tick={{ stroke: "#959393", strokeWidth: 0 }}
           />
           <Bar
-        
             dataKey="earn"
             fill="#00D698"
             barSize={36}

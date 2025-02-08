@@ -29,7 +29,6 @@ export default function AddAdminForm({ setIsModalOpen }) {
       const res = await createAmin(userData).unwrap();
 
       if (res?.status === 400) {
-        console.log(res.status);
         toast.error(res.data.message);
       }
 
@@ -37,10 +36,7 @@ export default function AddAdminForm({ setIsModalOpen }) {
         toast.success("Admin created successfully.");
         setIsModalOpen(false);
       }
-
-      console.log(res);
     } catch (error) {
-      console.log(error);
       toast.error(error.data.message);
     }
   };

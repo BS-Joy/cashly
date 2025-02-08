@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import PageHeading from "../../Components/PageHeading";
+import DomPurify from "dompurify";
 import { FaAngleLeft } from "react-icons/fa6";
 import { useGetTermsConditionQuery } from "../../features/dashboard/dashboardSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
@@ -28,7 +28,15 @@ const TermsConditions = () => {
   if (isSuccess) {
     termsCondition = (
       <div className="space-y-5 text-black text-sm">
-        <p>{data?.data?.description || "No terms and condition"}</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: DomPurify.sanitize(
+              data?.data?.description || "No terms and condition"
+            ),
+          }}
+        >
+          {/* {data?.data?.description} */}
+        </p>
       </div>
     );
   }

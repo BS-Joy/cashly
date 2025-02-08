@@ -19,7 +19,6 @@ const Agency = () => {
     data: agencyList,
     isLoading,
     isError,
-    error,
     isSuccess,
   } = useGetAllAgenciesQuery();
 
@@ -82,8 +81,6 @@ const Agency = () => {
   }
 
   if (isSuccess) {
-    console.log(agencyList);
-
     if (agencyList.data.result.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">No buyers found.</div>
