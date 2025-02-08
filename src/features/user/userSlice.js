@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Cookies } from "react-cookie";
+import localStorageUtil from "../../utils/localstorageutils";
 
 const cookies = new Cookies();
 
-const userProfileData = cookies.get("user_profile");
+const userProfileData = localStorageUtil.getItem("user_profile");
 
 const initialState = {
   user: userProfileData || null,
@@ -18,13 +19,13 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      cookies.remove("token");
-      cookies.remove("user_profile");
-      cookies.remove("rpev");
+      localStorageUtil.removeItem("token");
+      localStorageUtil.removeItem("user_profile");
+      localStorageUtil.removeItem("rpev");
 
-      const user = cookies.get("user_profile");
+      // const user = cookies.get("user_profile");
 
-      console.log(user);
+      // console.log(user);
     },
   },
 });

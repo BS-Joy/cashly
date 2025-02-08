@@ -4,13 +4,13 @@ import { LuMailOpen } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { useForgotPasswordMutation } from "../../../../features/user/authSlice";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import LoadingSpinner from "../../../../Components/LoadingSpinner";
 import toast from "react-hot-toast";
+import useAuth from "../../../../hooks/useAuth";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user);
+  const user = useAuth();
   const [loggedInUserEmail, setLoggedInUserEmail] = useState({
     email: user?.email || "",
   });

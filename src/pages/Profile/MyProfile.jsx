@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { Button, Form, Input } from "antd";
-import dashProfile from "../../assets/images/dashboard-profile.png";
-import { FiEdit } from "react-icons/fi";
-import { Outlet, useNavigate } from "react-router-dom";
-import PhoneCountryInput from "../../Components/PhoneCountryInput";
+import { Form, Input } from "antd";
+import { useNavigate } from "react-router-dom";
 import PageHeading from "../../Components/PageHeading";
 import PasswordChangeModalForm from "../../Components/User/PasswordChangeModalForm";
-import { FaAngleLeft } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
-import { useSelector } from "react-redux";
 import { getImageUrl } from "../../utils/getImageUrl";
+import useAuth from "../../hooks/useAuth";
 
 const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
@@ -17,7 +12,7 @@ const defaultThumbnail =
 const MyProfile = () => {
   const navigate = useNavigate();
 
-  const user = useSelector((state) => state.user.user);
+  const user = useAuth();
 
   const profileImage = getImageUrl(user?.image, defaultThumbnail);
 

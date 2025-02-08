@@ -10,6 +10,7 @@ import ResetPassword from "../pages/Auth/ResetPassword";
 // import ChatPage from "../pages/Main/Support/ChatPage";
 // import ChangePassword from "../pages/Main/Setting/Change-password/ChangePassword";
 import SuccessPasswordChange from "../pages/Auth/SuccessPasswordChange";
+import PublicRoute from "./PublicRoute";
 
 const router = createBrowserRouter([
   {
@@ -35,23 +36,43 @@ const router = createBrowserRouter([
       },
       {
         path: "/auth/sign-in",
-        element: <SignIn />,
+        element: (
+          <PublicRoute>
+            <SignIn />
+          </PublicRoute>
+        ),
       },
       {
         path: "/auth/forgot-password",
-        element: <ForgotPassword />,
+        element: (
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        ),
       },
       {
         path: "/auth/verify-email",
-        element: <VerifyEmail />,
+        element: (
+          <PublicRoute>
+            <VerifyEmail />
+          </PublicRoute>
+        ),
       },
       {
         path: "/auth/reset-password",
-        element: <ResetPassword />,
+        element: (
+          <PublicRoute>
+            <ResetPassword />
+          </PublicRoute>
+        ),
       },
       {
         path: "/auth/success-pass-change",
-        element: <SuccessPasswordChange />,
+        element: (
+          <PublicRoute>
+            <SuccessPasswordChange />
+          </PublicRoute>
+        ),
       },
     ],
   },

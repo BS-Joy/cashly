@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import PageHeading from "../../Components/PageHeading";
 import { MdCameraAlt } from "react-icons/md";
 import { getImageUrl } from "../../utils/getImageUrl";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useUpdateAdminProfileMutation } from "../../features/user/authSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import toast from "react-hot-toast";
 import { Cookies } from "react-cookie";
 import { setUser } from "../../features/user/userSlice";
+import useAuth from "../../hooks/useAuth";
 
 const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
@@ -26,7 +27,7 @@ const EditMyProfile = () => {
 
   const [updateProfile, { isLoading }] = useUpdateAdminProfileMutation();
 
-  const user = useSelector((state) => state.user.user);
+  const user = useAuth();
   const profileImage = getImageUrl(user?.image, defaultThumbnail);
 
   const onFinish = async (values) => {

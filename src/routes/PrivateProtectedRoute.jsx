@@ -1,12 +1,13 @@
 import React from "react";
-import { Cookies } from "react-cookie";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import localStorageUtil from "../utils/localstorageutils";
+import useAuth from "../hooks/useAuth";
 
 export default function PrivateProtectedRoute({ children }) {
-  const cookies = new Cookies();
-  const isTokenAvailable = cookies.get("token");
-  const user = useSelector((state) => state.user.user);
+  // const cookies = new Cookies();
+  const isTokenAvailable = localStorageUtil.getItem("token");
+
+  const user = useAuth();
 
   if (isTokenAvailable && user?._id && user?.role === "SUPER_ADMIN") {
     return children;

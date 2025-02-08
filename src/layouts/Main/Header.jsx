@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Badge } from "antd";
-import profileImage from "../../assets/images/dash-profile.png";
 import { TbBellRinging } from "react-icons/tb";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Select } from "antd";
-import { useSelector } from "react-redux";
 import { getImageUrl } from "../../utils/getImageUrl";
 import { useGetAdminNotificationsQuery } from "../../features/dashboard/dashboardSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
+import useAuth from "../../hooks/useAuth";
 
 const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
@@ -36,7 +33,7 @@ const Header = () => {
     notifactionCount = notifications?.data?.meta?.unread;
   }
 
-  const user = useSelector((state) => state.user.user);
+  const user = useAuth();
 
   const profileImage = getImageUrl(user?.image, defaultThumbnail);
 

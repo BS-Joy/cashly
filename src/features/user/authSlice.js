@@ -1,5 +1,6 @@
 import { Cookies } from "react-cookie";
 import { apiSlice } from "../api/apiSlice";
+import localStorageUtil from "../../utils/localstorageutils";
 
 export const extendedAuthApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,9 +13,9 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         };
       },
       transformResponse: (response) => {
-        const cookies = new Cookies();
+        // const cookies = new Cookies();
 
-        cookies.set("token", response?.data?.accessToken, { path: "/" });
+        localStorageUtil.setItem("token", response?.data?.accessToken);
 
         return response;
       },

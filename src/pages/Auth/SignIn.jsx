@@ -9,6 +9,7 @@ import { setUser } from "../../features/user/userSlice";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import { Cookies } from "react-cookie";
+import localStorageUtil from "../../utils/localstorageutils";
 // import { usePostLoginMutation } from "../../redux/features/Auth/authApi";
 // import { setUser } from "../../redux/features/Auth/authSlice";
 // import Swal from "sweetalert2";
@@ -27,8 +28,8 @@ const SignIn = () => {
         let userProfile = res?.data?.data?.user;
         if (userProfile?.password) {
           const { password, ...rest } = userProfile;
-          cookies.set("user_profile", rest, { path: "/" });
-          cookies.set("rpev", false, { path: "/" }); // rpev: reset password email verification
+          localStorageUtil.setItem("user_profile", rest);
+          localStorageUtil.setItem("rpev", false); // rpev: reset password email verification
           dispatch(setUser(rest));
         }
         toast.success("Login Successfull.");

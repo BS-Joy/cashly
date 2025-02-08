@@ -1,14 +1,13 @@
-import React from "react";
-import { Cookies } from "react-cookie";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import localStorageUtil from "../utils/localstorageutils";
+import useAuth from "../hooks/useAuth";
 
 export default function ProtectResetPassRoute({ children }) {
-  const cookies = new Cookies();
-  const isTokenAvailable = cookies.get("token");
-  const isEmailVerified = cookies.get("rpev");
+  //   const cookies = new Cookies();
+  const isTokenAvailable = localStorageUtil.getItem("token");
+  const isEmailVerified = localStorageUtil.getItem("rpev");
   console.log(isEmailVerified);
-  const user = useSelector((state) => state.user.user);
+  const user = useAuth();
 
   if (
     isTokenAvailable &&
@@ -18,11 +17,6 @@ export default function ProtectResetPassRoute({ children }) {
   ) {
     return children;
   } else {
-    return (
-      <Navigate
-        to={"/settings/change-password/forgot-password"}
-        state={{ msg: "Please verify email first." }}
-      />
-    );
+    return <Navigate to={"/settings/change-password/forgot-password"} />;
   }
 }
