@@ -263,24 +263,24 @@ export const dashboardItems = [
           </PrivateProtectedRoute>
         ),
       },
-      {
-        name: "Trust & Safety",
-        icon: BiMessageSquareDetail,
-        path: "settings/trust-safety",
-        element: (
-          <PrivateProtectedRoute>
-            <Trust />
-          </PrivateProtectedRoute>
-        ),
-      },
-      {
-        path: "settings/trust-safety/edit",
-        element: (
-          <PrivateProtectedRoute>
-            <EditTrust />
-          </PrivateProtectedRoute>
-        ),
-      },
+      // {
+      //   name: "Trust & Safety",
+      //   icon: BiMessageSquareDetail,
+      //   path: "settings/trust-safety",
+      //   element: (
+      //     <PrivateProtectedRoute>
+      //       <Trust />
+      //     </PrivateProtectedRoute>
+      //   ),
+      // },
+      // {
+      //   path: "settings/trust-safety/edit",
+      //   element: (
+      //     <PrivateProtectedRoute>
+      //       <EditTrust />
+      //     </PrivateProtectedRoute>
+      //   ),
+      // },
     ],
   },
 ];
