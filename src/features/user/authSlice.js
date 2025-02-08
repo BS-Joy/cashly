@@ -51,6 +51,13 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         body: updatedUserData,
       }),
     }),
+    adminPasswordChange: builder.mutation({
+      query: (passwords) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: passwords,
+      }),
+    }),
   }),
 });
 
@@ -59,4 +66,5 @@ export const {
   useGetAllAdminQuery,
   useCreateAdminMutation,
   useUpdateAdminProfileMutation,
+  useAdminPasswordChangeMutation,
 } = extendedAuthApiSlice;
