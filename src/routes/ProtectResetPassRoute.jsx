@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
-import localStorageUtil from "../utils/localstorageutils";
+import localStorageUtil, {
+  setItemWithExpiration,
+} from "../utils/localstorageutils";
 import useAuth from "../hooks/useAuth";
 
 export default function ProtectResetPassRoute({ children }) {
-  //   const cookies = new Cookies();
   const isTokenAvailable = localStorageUtil.getItem("token");
   const isEmailVerified = localStorageUtil.getItem("rpev");
-  console.log(isEmailVerified);
   const user = useAuth();
 
   if (
@@ -17,6 +17,11 @@ export default function ProtectResetPassRoute({ children }) {
   ) {
     return children;
   } else {
+    setItemWithExpiration(
+      "evMessage",
+      "Please verify your email first.",
+      2 / 60
+    );
     return <Navigate to={"/settings/change-password/forgot-password"} />;
   }
 }

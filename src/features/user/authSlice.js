@@ -66,6 +66,20 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         body: email,
       }),
     }),
+    verifyEmail: builder.mutation({
+      query: (verificationData) => ({
+        url: "/auth/verify-email",
+        method: "POST",
+        body: verificationData,
+      }),
+    }),
+    retsetPassword: builder.mutation({
+      query: (newPassword) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: newPassword,
+      }),
+    }),
   }),
 });
 
@@ -76,4 +90,6 @@ export const {
   useUpdateAdminProfileMutation,
   useAdminPasswordChangeMutation,
   useForgotPasswordMutation,
+  useVerifyEmailMutation,
+  useRetsetPasswordMutation,
 } = extendedAuthApiSlice;

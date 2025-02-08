@@ -7,14 +7,21 @@ import { useState } from "react";
 import LoadingSpinner from "../../../../Components/LoadingSpinner";
 import toast from "react-hot-toast";
 import useAuth from "../../../../hooks/useAuth";
+import localStorageUtil, {
+  getItemWithExpiration,
+} from "../../../../utils/localstorageutils";
+import PageHeading from "../../../../Components/PageHeading";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const user = useAuth();
+  const evMessage = getItemWithExpiration("evMessage");
+
   const [loggedInUserEmail, setLoggedInUserEmail] = useState({
     email: user?.email || "",
   });
   const [validationMesaage, setValidationMessage] = useState(null);
+
   const [sendEmail, { isLoading }] = useForgotPasswordMutation();
 
   const handleForgotPass = async () => {
@@ -28,13 +35,24 @@ const ForgotPassword = () => {
       toast.error(error.data.message);
     }
   };
+
   return (
     <div className="flex items-center justify-center ">
       <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[468px] mx-auto py-10 px-8">
         <div className="flex flex-col  w-full max-w-md mx-auto mt-10 p-4 rounded-lg space-y-4">
+          <div>
+            {evMessage && (
+              <p className="text-lg text-center text-blue-900 font-bold">
+                {evMessage}
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-2">
-            <FaArrowLeft />
-            <h1 className="text-2xl">Forgot password</h1>
+            <PageHeading
+              backPath={"/settings/change-password"}
+              title={"Forgot Password"}
+              showArrow={true}
+            />
           </div>
           <h1>Please enter your email address to reset your password </h1>
           {/* Input Fields */}

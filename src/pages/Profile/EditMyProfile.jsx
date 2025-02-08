@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { Cookies } from "react-cookie";
 import { setUser } from "../../features/user/userSlice";
 import useAuth from "../../hooks/useAuth";
+import localStorageUtil from "../../utils/localstorageutils";
 
 const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
@@ -50,8 +51,8 @@ const EditMyProfile = () => {
 
       if (res.data?.success) {
         toast.success("Profile updated successfully.");
-        cookies.remove("user_profile");
-        cookies.set("user_profile", res.data?.data);
+        localStorageUtil.removeItem("user_profile");
+        localStorageUtil.setItem("user_profile", res.data?.data);
         dispatch(setUser(res.data?.data));
         navigate(-1);
       }

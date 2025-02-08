@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Cookies } from "react-cookie";
 import localStorageUtil from "../../utils/localstorageutils";
 
 export const apiSlice = createApi({

@@ -40,4 +40,28 @@ const localStorageUtil = {
   },
 };
 
+export const setItemWithExpiration = (key, value, expirationInMinutes) => {
+  const expirationTimestamp =
+    new Date().getTime() + expirationInMinutes * 60 * 1000; // expiration time in milliseconds
+  const data = { value, expiration: expirationTimestamp };
+
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+export function getItemWithExpiration(key) {
+  const data = JSON.parse(localStorage.getItem(key));
+
+  if (!data) return null; // Item doesn't exist
+
+  const currentTime = new Date().getTime();
+
+  // If the current time is greater than the expiration time, remove the item and return null
+  if (currentTime > data.expiration) {
+    localStorage.removeItem(key);
+    return null;
+  }
+
+  return data.value; // Item is still valid
+}
+
 export default localStorageUtil;

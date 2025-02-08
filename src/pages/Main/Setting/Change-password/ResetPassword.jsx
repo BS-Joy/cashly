@@ -1,65 +1,123 @@
-import { FaArrowLeft, FaEye, FaLock } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Form, Input } from "antd";
+import { useNavigate } from "react-router-dom";
 import { MdLockOutline } from "react-icons/md";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import RoundedButton from "../../../../Components/RoundedButton";
+import { useRetsetPasswordMutation } from "../../../../features/user/authSlice";
+import LoadingSpinner from "../../../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { msg: toastMessage } = location.state();
+  const [resetPassword, { isLoading }] = useRetsetPasswordMutation();
 
-  console.log(toastMessage);
+  const onFinish = async (values) => {
+    try {
+      const response = await resetPassword(values).unwrap();
+      console.log(response);
+      toast.success(response?.message || "Password reset successful!");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error?.data?.message || "Something went wrong!");
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[500px] mx-auto py-10 px-8">
-        <div className="flex flex-col  w-full max-w-md mx-auto mt-10 p-4 rounded-lg space-y-4">
+        <div className="flex flex-col w-full max-w-md mx-auto mt-10 p-4 rounded-lg space-y-4">
           <div className="flex items-center gap-2">
-            <FaArrowLeft />
-            <h1 className="text-2xl">Reset password</h1>
+            <FaArrowLeft
+              onClick={() => navigate(-1)}
+              className="cursor-pointer"
+            />
+            <h1 className="text-2xl">Reset Password</h1>
           </div>
-          <h1>Your password must be 8-10 character long.</h1>
-          {/* Input Fields */}
-          <div className="flex flex-col w-full space-y-4">
-            {[
-              {
-                label: "Set your new password",
-                placeholder: "Set your password",
-              },
-              {
-                label: "Re-enter new password",
-                placeholder: "Re-enter password",
-              },
-            ].map(({ label, placeholder }, index) => (
-              <div>
-                {/* <h1 className="mb-3">{label}</h1> */}
-                <div key={index} className="relative flex items-center">
-                  {/* Lock Icon */}
-                  {/* <MdLockOutline color="#9C1B1B" className="absolute left-3 " /> */}
-                  {/* Input Field */}
-                  <input
-                    type="password"
-                    placeholder={placeholder}
-                    className="w-full pl-3 pr-10 py-2 border border-red-400 rounded-lg placeholder:text-black-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                  />
-                  {/* Eye Icon */}
-                  <FaRegEyeSlash className="absolute right-3  cursor-pointer" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <h1>Your password must be 8-10 characters long.</h1>
 
-          {/* Forgot Password */}
-          <p
-            className="mt-4 text-sm text-red-500 font-bold cursor-pointer hover:underline"
-            onClick={(e) => navigate(`forgot-password`)}
-          >
-            Forgot Password?
-          </p>
+          {/* Ant Design Form */}
+          <Form layout="vertical" onFinish={onFinish} requiredMark={false}>
+            <div className="flex flex-col w-full">
+              {[
+                {
+                  name: "newPassword",
+                  label: "Set your new password",
+                  placeholder: "Set your password",
+                },
+                {
+                  name: "confirmPassword",
+                  label: "Re-enter new password",
+                  placeholder: "Re-enter password",
+                },
+              ].map(({ name, label, placeholder }, index) => (
+                <Form.Item
+                  key={index}
+                  name={name}
+                  label={<span className="text-black">{label}</span>} // No asterisk
+                  rules={
+                    name === "confirmPassword"
+                      ? [
+                          {
+                            required: true,
+                            message: "Please confirm your password",
+                          },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (
+                                !value ||
+                                getFieldValue("newPassword") === value
+                              ) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(
+                                new Error("Passwords do not match!")
+                              );
+                            },
+                          }),
+                        ]
+                      : [
+                          {
+                            required: true,
+                            message: "Please enter a new password",
+                          },
+                          {
+                            min: 8,
+                            max: 10,
+                            message: "Password must be 8-10 characters",
+                          },
+                        ]
+                  }
+                >
+                  <div className="relative flex items-center">
+                    <Input.Password
+                      placeholder={placeholder}
+                      className="w-full pl-10 pr-10 py-2 border border-red-400 rounded-lg placeholder:text-black-300 focus:outline-none focus:border focus:border-black focus:ring-0"
+                    />
+                    {/* Lock Icon */}
+                    <MdLockOutline
+                      color="#9C1B1B"
+                      className="absolute left-3 z-10"
+                    />
+                  </div>
+                </Form.Item>
+              ))}
+            </div>
 
-          {/* Update Password Button */}
-          <button className="mt-6 w-full bg-red-700 text-white py-2 rounded-full hover:bg-gray-800">
-            Reset Password
-          </button>
+            {/* Reset Password Button */}
+            <Form.Item>
+              <RoundedButton
+                className="mt-6 w-full bg-red-700 text-white py-4 rounded-full hover:bg-red-800/90"
+                htmlType="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <LoadingSpinner size={5} color="stroke-white" />
+                ) : (
+                  "Reset Password"
+                )}
+              </RoundedButton>
+            </Form.Item>
+          </Form>
         </div>
       </div>
     </div>
