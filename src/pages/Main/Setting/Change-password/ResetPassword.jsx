@@ -3,20 +3,27 @@ import { Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { MdLockOutline } from "react-icons/md";
 import RoundedButton from "../../../../Components/RoundedButton";
-import { useRetsetPasswordMutation } from "../../../../features/user/authSlice";
 import LoadingSpinner from "../../../../Components/LoadingSpinner";
 import toast from "react-hot-toast";
+import localStorageUtil from "../../../../utils/localstorageutils";
+import { useResetPasswordMutation } from "../../../../features/user/authSlice";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-  const [resetPassword, { isLoading }] = useRetsetPasswordMutation();
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const resetPassToken = localStorageUtil.getItem("resetPassToken");
 
   const onFinish = async (values) => {
     try {
-      const response = await resetPassword(values).unwrap();
-      console.log(response);
-      toast.success(response?.message || "Password reset successful!");
-      navigate("/login");
+      const response = await resetPassword({
+        values,
+        token: resetPassToken,
+      }).unwrap();
+      if (response?.success) {
+        toast.success(response?.message || "Password reset successful!");
+        localStorageUtil.removeItem("resetPassToken");
+        navigate("/settings");
+      }
     } catch (error) {
       toast.error(error?.data?.message || "Something went wrong!");
     }

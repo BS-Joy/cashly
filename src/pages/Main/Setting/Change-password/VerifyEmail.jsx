@@ -32,8 +32,8 @@ const VerifyEmail = () => {
         oneTimeCode: parseInt(otp),
       };
       const response = await verifyEmail(verificationData).unwrap();
-      console.log(response);
       if (response?.success) {
+        localStorageUtil.setItem("resetPassToken", response?.data?.data);
         toast.success("Email verified successfully!");
         localStorageUtil.removeItem("rpev");
         localStorageUtil.setItem("rpev", true);

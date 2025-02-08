@@ -73,11 +73,14 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         body: verificationData,
       }),
     }),
-    retsetPassword: builder.mutation({
-      query: (newPassword) => ({
+    resetPassword: builder.mutation({
+      query: ({ values, token }) => ({
         url: "/auth/reset-password",
         method: "POST",
-        body: newPassword,
+        body: values, // Send only password data
+        headers: {
+          Authorization: token,
+        },
       }),
     }),
   }),
@@ -91,5 +94,5 @@ export const {
   useAdminPasswordChangeMutation,
   useForgotPasswordMutation,
   useVerifyEmailMutation,
-  useRetsetPasswordMutation,
+  useResetPasswordMutation,
 } = extendedAuthApiSlice;
