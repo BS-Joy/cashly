@@ -9,6 +9,8 @@ export const apiSlice = createApi({
       const cookies = new Cookies();
       const token = cookies.get("token");
 
+      console.log(token);
+
       if (
         !token &&
         !["login", "forgotPass", "verifyEmail", "resetPassword"].includes(
