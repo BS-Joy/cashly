@@ -28,15 +28,14 @@ const Sidebar = () => {
       confirmButtonColor: "#DC2626",
       reverseButtons: true,
     }).then((res) => {
+      console.log(res);
       if (res.isConfirmed) {
+        console.log("i am here");
         dispatch(logout());
-        navigate("/auth");
       }
     });
   };
-  // useEffect(() => {
-  //   // console.log(location.pathname.includes("earnings"));
-  // }, [location.pathname]);
+
   return (
     <div className="fixed top-0 left-0 w-[290px] min-h-screen h-full pr-0 bg-white">
       <div className="h-full flex flex-col justify-between  pt-[50px] border drop-shadow">

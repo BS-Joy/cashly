@@ -57,6 +57,7 @@ import { MdOutlineSubscriptions } from "react-icons/md";
 import AddSubscription from "../pages/Main/Subscription/AddSubscription";
 import AgencyRequest from "../pages/Main/AgencyRequest/AgencyRequest";
 import PrivateProtectedRoute from "../routes/PrivateProtectedRoute";
+import ProtectResetPassRoute from "../routes/ProtectResetPassRoute";
 
 export const dashboardItems = [
   {
@@ -222,9 +223,9 @@ export const dashboardItems = [
       {
         path: "settings/change-password/forgot-password/verify-email/reset-password",
         element: (
-          <PrivateProtectedRoute>
+          <ProtectResetPassRoute>
             <ResetPassword />
-          </PrivateProtectedRoute>
+          </ProtectResetPassRoute>
         ),
       },
       {

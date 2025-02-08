@@ -1,10 +1,14 @@
 import { FaArrowLeft, FaEye, FaLock } from "react-icons/fa6";
 import { MdLockOutline } from "react-icons/md";
 import { FaRegEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { msg: toastMessage } = location.state();
+
+  console.log(toastMessage);
   return (
     <div className="flex items-center justify-center ">
       <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[500px] mx-auto py-10 px-8">

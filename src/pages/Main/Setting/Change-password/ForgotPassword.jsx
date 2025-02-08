@@ -2,9 +2,32 @@ import { FaArrowLeft, FaRegEyeSlash } from "react-icons/fa6";
 import { MdLockOutline } from "react-icons/md";
 import { LuMailOpen } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { useForgotPasswordMutation } from "../../../../features/user/authSlice";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import LoadingSpinner from "../../../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState({
+    email: user?.email || "",
+  });
+  const [validationMesaage, setValidationMessage] = useState(null);
+  const [sendEmail, { isLoading }] = useForgotPasswordMutation();
+
+  const handleForgotPass = async () => {
+    try {
+      const res = await sendEmail(loggedInUserEmail).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        navigate("verify-email");
+      }
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  };
   return (
     <div className="flex items-center justify-center ">
       <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[468px] mx-auto py-10 px-8">
@@ -24,20 +47,40 @@ const ForgotPassword = () => {
                 {/* Input Field */}
                 <input
                   type="email"
+                  onChange={(e) => {
+                    const userEmail = e.target.value;
+                    setLoggedInUserEmail(userEmail);
+                    if (user?.email !== userEmail) {
+                      setValidationMessage(
+                        "Email didn't match with your email"
+                      );
+                    } else {
+                      setValidationMessage(null);
+                    }
+                  }}
                   placeholder="Enter your email"
-                  className="w-full pl-10 pr-10 py-2 border border-red-400 rounded-lg placeholder:text-black-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  value={loggedInUserEmail?.email}
+                  className="w-full pl-10 pr-10 py-2 border border-red-400 rounded-lg placeholder:text-black-300 focus:outline-none focus:border focus:border-black"
                 />
               </div>
+              {validationMesaage && (
+                <p className="text-red-500 text-sm mt-2">{validationMesaage}</p>
+              )}
             </div>
             {/* // ))} */}
           </div>
 
           {/* Send OTP Button */}
           <button
-            className="mt-6 w-full bg-red-700 text-white py-2 rounded-full hover:bg-gray-800"
-            onClick={(e) => navigate(`verify-email`)}
+            disabled={validationMesaage || isLoading}
+            className="mt-6 w-full flex justify-center bg-red-700 disabled:bg-red-700/40 disabled:cursor-not-allowed text-white py-2 rounded-full hover:bg-red-900"
+            onClick={handleForgotPass}
           >
-            Send OTP
+            {isLoading ? (
+              <LoadingSpinner size={5} color="stroke-white" />
+            ) : (
+              "Send OTP"
+            )}
           </button>
         </div>
       </div>

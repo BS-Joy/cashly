@@ -20,6 +20,11 @@ export const userSlice = createSlice({
       state.user = null;
       cookies.remove("token");
       cookies.remove("user_profile");
+      cookies.remove("rpev");
+
+      const user = cookies.get("user_profile");
+
+      console.log(user);
     },
   },
 });

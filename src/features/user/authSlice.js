@@ -58,6 +58,13 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         body: passwords,
       }),
     }),
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: email,
+      }),
+    }),
   }),
 });
 
@@ -67,4 +74,5 @@ export const {
   useCreateAdminMutation,
   useUpdateAdminProfileMutation,
   useAdminPasswordChangeMutation,
+  useForgotPasswordMutation,
 } = extendedAuthApiSlice;

@@ -28,6 +28,7 @@ const SignIn = () => {
         if (userProfile?.password) {
           const { password, ...rest } = userProfile;
           cookies.set("user_profile", rest, { path: "/" });
+          cookies.set("rpev", false, { path: "/" }); // rpev: reset password email verification
           dispatch(setUser(rest));
         }
         toast.success("Login Successfull.");
@@ -36,7 +37,7 @@ const SignIn = () => {
         toast.error(res?.error?.data?.message);
       }
     } catch (error) {
-      toast.error("Something wen wrong!");
+      toast.error("Something went wrong!");
     }
   };
   return (
