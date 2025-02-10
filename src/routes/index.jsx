@@ -11,6 +11,7 @@ import ResetPassword from "../pages/Auth/ResetPassword";
 // import ChangePassword from "../pages/Main/Setting/Change-password/ChangePassword";
 import SuccessPasswordChange from "../pages/Auth/SuccessPasswordChange";
 import PublicRoute from "./PublicRoute";
+import PublicProtectedRoute from "./PublicProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -61,9 +62,9 @@ const router = createBrowserRouter([
       {
         path: "/auth/reset-password",
         element: (
-          <PublicRoute>
+          <PublicProtectedRoute>
             <ResetPassword />
-          </PublicRoute>
+          </PublicProtectedRoute>
         ),
       },
       {
