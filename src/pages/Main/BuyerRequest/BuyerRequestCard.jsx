@@ -8,7 +8,20 @@ import { useState } from "react";
 import RoundedButton from "../../../Components/RoundedButton";
 import { AiOutlineFullscreen } from "react-icons/ai";
 
-export default function BuyerRequestCard({ item }) {
+const extractFileName = (path) => {
+  const fileName = path.split("/").pop();
+  return fileName;
+};
+
+function shortenFileName(fileName, maxLength = 20) {
+  if (fileName.length > maxLength) {
+    return fileName.slice(0, maxLength) + "...";
+  }
+  return fileName;
+}
+
+export default function BuyerRequestCard({ item, doc }) {
+  const buyer = item?.buyer;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -17,12 +30,11 @@ export default function BuyerRequestCard({ item }) {
     setModalData(data);
   };
 
-  const buyer = item?.userId?.buyer;
+  const buyerImage = getImageUrl(buyer?.image, defaultThumbnail);
 
-  const buyerImage = getImageUrl(buyer.image, defaultThumbnail);
-
-  const docImages = item.image;
-  const docPdf = item.document;
+  const docImages = doc[0]?.image || [];
+  const docPdf = doc[0]?.document || "";
+  const docFileName = shortenFileName(extractFileName(docPdf), 20);
 
   const handleDeleteConfirmation = () => {
     Swal.fire({
@@ -71,7 +83,7 @@ export default function BuyerRequestCard({ item }) {
                   alt="document_image"
                   className="w-16 h-16 object-contain rounded-full border border-primary"
                 />
-                <p>{`doc-${index + 1}`}</p>
+                <p>{extractFileName(img)}</p>
                 <div
                   onClick={() =>
                     showModal({
@@ -97,7 +109,7 @@ export default function BuyerRequestCard({ item }) {
                   className="w-16 h-16 object-contain"
                 />
               </a>
-              <p>{`doc-${docImages.length + 1}`}</p>
+              <p>{docFileName}</p>
               {/* <PDFViewer
                 pdfUrl={import.meta.env.VITE_API_IMAGE_BASE_URL + docPdf}
               /> */}
@@ -130,13 +142,16 @@ export default function BuyerRequestCard({ item }) {
         maxWidth="500px"
       >
         {modalData.imgUrl && (
-          <div className="flex justify-center mt-8 rounded border border-primary">
-            <img
-              src={modalData.imgUrl}
-              alt="document_image"
-              className=" object-cover border border-primary"
-            />
-          </div>
+          <>
+            <p>{extractFileName(modalData?.imgUrl)}</p>
+            <div className="flex justify-center mt-8 rounded border border-primary">
+              <img
+                src={modalData.imgUrl}
+                alt="document_image"
+                className=" object-cover border border-primary"
+              />
+            </div>
+          </>
         )}
         <div className="flex justify-center mt-4">
           <RoundedButton

@@ -27,7 +27,6 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "buyer", id: "LIST" }];
       },
     }),
-
     getBuyersDoc: builder.query({
       query: () => "/document/get-document-buyer",
       providesTags: (result) => {
@@ -50,7 +49,6 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "buyerDoc", id: "LIST" }];
       },
     }),
-
     getAllAgencies: builder.query({
       query: () => "/document/get-document-agency",
       providesTags: (result) => {

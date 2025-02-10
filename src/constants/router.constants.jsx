@@ -58,6 +58,10 @@ import AddSubscription from "../pages/Main/Subscription/AddSubscription";
 import AgencyRequest from "../pages/Main/AgencyRequest/AgencyRequest";
 import PrivateProtectedRoute from "../routes/PrivateProtectedRoute";
 import ProtectResetPassRoute from "../routes/ProtectResetPassRoute";
+import SuspendListPage from "../pages/Main/suspend/SuspendListPage";
+import { RiUserUnfollowLine } from "react-icons/ri";
+import { BiBlock } from "react-icons/bi";
+import RejectedRequestsPage from "../pages/Main/rejectRequests/RejectedRequestsPage";
 
 export const dashboardItems = [
   {
@@ -120,12 +124,32 @@ export const dashboardItems = [
     ),
   },
   {
+    name: "Rejected Requests",
+    path: "reject-requests",
+    icon: BiBlock,
+    element: (
+      <PrivateProtectedRoute>
+        <RejectedRequestsPage />
+      </PrivateProtectedRoute>
+    ),
+  },
+  {
     name: "Add Admin",
     path: "admins",
     icon: GrUserSettings,
     element: (
       <PrivateProtectedRoute>
         <Admin />
+      </PrivateProtectedRoute>
+    ),
+  },
+  {
+    name: "Suspended Users",
+    path: "suspends",
+    icon: RiUserUnfollowLine,
+    element: (
+      <PrivateProtectedRoute>
+        <SuspendListPage />
       </PrivateProtectedRoute>
     ),
   },
