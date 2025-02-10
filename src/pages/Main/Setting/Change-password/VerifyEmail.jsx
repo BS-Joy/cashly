@@ -3,7 +3,10 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useVerifyEmailMutation } from "../../../../features/user/authSlice";
+import {
+  useForgotPasswordMutation,
+  useVerifyEmailMutation,
+} from "../../../../features/user/authSlice";
 import useAuth from "../../../../hooks/useAuth";
 import localStorageUtil from "../../../../utils/localstorageutils";
 import LoadingSpinner from "../../../../Components/LoadingSpinner";
@@ -13,9 +16,24 @@ const VerifyEmail = () => {
   const user = useAuth();
   const [otp, setOtp] = useState("");
   const [verifyEmail, { isLoading }] = useVerifyEmailMutation();
+  const [reSendOtp, { isLoading: resendIsLoading }] =
+    useForgotPasswordMutation();
 
   const handleOtpChange = (text) => {
     setOtp(text);
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const response = await reSendOtp({ email: user?.email }).unwrap();
+      if (response?.success) {
+        toast.success("OTP has been resent successfully!");
+      } else {
+        toast.error(response?.message || "Failed to resend OTP.");
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Something went wrong!");
+    }
   };
 
   const handleVerify = async () => {
@@ -66,7 +84,16 @@ const VerifyEmail = () => {
 
           <div className="flex justify-between items-center">
             <h1>Didn’t receive the code?</h1>
-            <h1 className="text-red-500 cursor-pointer">Resend</h1>
+            <button
+              onClick={handleResendOtp}
+              className="text-red-500 cursor-pointer hover:underline"
+            >
+              {resendIsLoading ? (
+                <LoadingSpinner size={5} color="stroke-primary" />
+              ) : (
+                "Resend"
+              )}
+            </button>
           </div>
 
           {/* Verify OTP Button */}
