@@ -73,6 +73,26 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "agency", id: "LIST" }];
       },
     }),
+    suspendBuyer: builder.mutation({
+      query: (userData) => ({
+        url: "/user-suspention/suspend-user",
+        method: "POST",
+        body: userData,
+      }),
+      invalidatesTags: (result, err, arg) => {
+        return [{ type: "buyer", id: arg?.userId }];
+      },
+    }),
+    suspendAgency: builder.mutation({
+      query: (userData) => ({
+        url: "/user-suspention/suspend-user",
+        method: "POST",
+        body: userData,
+      }),
+      invalidatesTags: (result, err, arg) => {
+        return [{ type: "agency", id: arg?.userId }];
+      },
+    }),
   }),
 });
 
@@ -80,4 +100,5 @@ export const {
   useGetAllBuyersQuery,
   useGetBuyersDocQuery,
   useGetAllAgenciesQuery,
+  useSuspendBuyerMutation,
 } = extendedBuyersApiSlice;

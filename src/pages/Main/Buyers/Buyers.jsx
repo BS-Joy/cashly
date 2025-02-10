@@ -4,24 +4,55 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import DashboardModal from "../../../Components/DashboardModal";
 import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import RoundedButton from "../../../Components/RoundedButton";
-import { useGetAllBuyersQuery } from "../../../features/buyer/buyerAgencySlice";
+import {
+  useGetAllBuyersQuery,
+  useSuspendBuyerMutation,
+} from "../../../features/buyer/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
+import Swal from "sweetalert2";
 
 const Buyers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
+  const [suspentionDays, setSuspentionDays] = useState(0);
 
   const {
     data: buyersList,
     isLoading,
     isError,
-    error,
     isSuccess,
   } = useGetAllBuyersQuery("approved");
+
+  const [suspendBuyer, { isLoading: suspendLoading }] =
+    useSuspendBuyerMutation();
 
   const showModal = (data) => {
     setIsModalOpen(true);
     setModalData(data);
+  };
+
+  const handleSuspention = async () => {
+    Swal.fire({
+      text: "Are you sure you want to suspend this user?",
+      showCancelButton: true,
+      confirmButtonText: "     Sure    ",
+      cancelButtonText: "Cancel",
+      showConfirmButton: true,
+      confirmButtonColor: "#DC2626",
+      reverseButtons: true,
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        console.log({
+          userId: modalData?.key,
+          day: parseInt(suspentionDays),
+        });
+        // const res = await suspendBuyer({
+        //   userId: modalData?.key,
+        //   day: suspentionDays,
+        // }).unwrap();
+        console.log("User suspended for: ", suspentionDays, "days");
+      }
+    });
   };
 
   const columns = [
@@ -78,6 +109,7 @@ const Buyers = () => {
   }
 
   if (isSuccess) {
+    // console.log(buyersList);
     // const filteredBuyers = buyersList.data.result.filter(
     //   (d) => d.loginStatus === "approved"
     // );
@@ -99,8 +131,8 @@ const Buyers = () => {
                 }`.trim() || "Not available"
               : "Not available",
 
-            email: item.email || "Not available",
-            phone: item.phone || "Not available",
+            email: item.buyer.email || "Not available",
+            phone: item.buyer.phone || "Not available",
             transAmount: item.transAmount || "Not available",
             subscription: item.subscription || "Not available",
           }))}
@@ -145,8 +177,22 @@ const Buyers = () => {
             <p>{modalData.subscription || "Not available"}</p>
           </div>
         </div>
-        <div className="flex justify-center mt-4">
-          <RoundedButton className="w-fit px-24">Suspend</RoundedButton>
+        <div className="flex gap-4 justify-center mt-4">
+          <input
+            onChange={(e) => {
+              const susDays = e.target.value;
+              setSuspentionDays(susDays);
+            }}
+            type="number"
+            className="w-[100px] pl-5 border border-primary rounded outline-none"
+            value={suspentionDays}
+          />
+          <RoundedButton
+            onClickHandler={handleSuspention}
+            className="w-fit px-24"
+          >
+            Suspend
+          </RoundedButton>
         </div>
       </DashboardModal>
     </div>

@@ -6,6 +6,7 @@ import { useForgotPasswordMutation } from "../../features/user/authSlice";
 import LoadingSpinner from "../../Components/LoadingSpinner";
 import localStorageUtil, {
   getItemWithExpiration,
+  setItemWithExpiration,
 } from "../../utils/localstorageutils";
 import PageHeading from "../../Components/PageHeading";
 
@@ -25,7 +26,7 @@ const ForgotPassword = () => {
       console.log(res);
       if (res?.success) {
         toast.success(res?.message);
-        localStorageUtil.setItem("otpEmail", emailForOtp?.email);
+        setItemWithExpiration("otpEmail", emailForOtp?.email, 2);
         navigate("/auth/verify-email");
       }
     } catch (error) {
