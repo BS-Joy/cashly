@@ -24,11 +24,9 @@ const VerifyEmail = () => {
       return;
     }
 
-    console.log(typeof otp);
-
     try {
       const verificationData = {
-        email: "badhan101525@gmail.com",
+        email: user?.email,
         oneTimeCode: parseInt(otp),
       };
       const response = await verifyEmail(verificationData).unwrap();
@@ -73,7 +71,7 @@ const VerifyEmail = () => {
 
           {/* Verify OTP Button */}
           <button
-            className="mt-6 w-full bg-red-700 text-white py-2 rounded-full hover:bg-red-800/90"
+            className="mt-6 w-full bg-red-700 text-white py-2 rounded-full flex justify-center hover:bg-red-800/90"
             onClick={handleVerify}
             disabled={isLoading}
           >

@@ -22,6 +22,8 @@ const ResetPassword = () => {
       if (response?.success) {
         toast.success(response?.message || "Password reset successful!");
         localStorageUtil.removeItem("resetPassToken");
+        localStorageUtil.removeItem("rpev");
+        localStorageUtil.setItem("rpev", false);
         navigate("/settings");
       }
     } catch (error) {

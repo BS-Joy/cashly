@@ -1,89 +1,92 @@
-import { Button, Checkbox, Input } from "antd";
-import Form from "antd/es/form/Form";
-import React from "react";
+import { LuMailOpen } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
-import image from "../../assets/images/forgot.png";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useForgotPasswordMutation } from "../../features/user/authSlice";
+import LoadingSpinner from "../../Components/LoadingSpinner";
+import localStorageUtil, {
+  getItemWithExpiration,
+} from "../../utils/localstorageutils";
 import PageHeading from "../../Components/PageHeading";
-import RoundedButton from "../../Components/RoundedButton";
-// import { useForgotPasswordMutation } from "../../redux/features/Auth/authApi";
-// import Swal from "sweetalert2";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  // const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-  const onFinish = async (values) => {
-    navigate(`/auth/verify-email`);
-    // try {
-    //   const response = await forgotPassword(values);
-    //   // console.log(response);
-    //   if (response?.data?.statusCode == 200) {
-    //     navigate(`/auth/verify-email/${values.email}`);
-    //   } else {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Failed!!",
-    //       text:
-    //         response?.data?.message ||
-    //         response?.error?.data?.message ||
-    //         "Something went wrong. Please try again later.",
-    //     });
-    //   }
-    // } catch (error) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Failed!!",
-    //     text: "Something went wrong. Please try again later.",
-    //   });
-    // }
+  const evMessage = getItemWithExpiration("evMessage");
+
+  const [emailForOtp, setEmailForOtp] = useState({
+    email: "",
+  });
+
+  const [sendEmail, { isLoading }] = useForgotPasswordMutation();
+
+  const handleForgotPass = async () => {
+    try {
+      const res = await sendEmail(emailForOtp).unwrap();
+      console.log(res);
+      if (res?.success) {
+        toast.success(res?.message);
+        localStorageUtil.setItem("otpEmail", emailForOtp?.email);
+        navigate("/auth/verify-email");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
   return (
-    <div className="min-h-[92vh] w-full flex justify-center items-center gap-1 lg:gap-8 z-10">
-      {/* <div className="border-r-0 lg:border-r-2 border-primary w-[99%] p-[8%] lg:p-[12%] lg:pr-0">
-        <img src={image} alt="" />
-      </div> */}
-      <div className="lg:p-[1%] order-first lg:order-last bg-white w-[35%] rounded-xl">
-        <div className="w-full py-[64px] lg:px-[44px] space-y-8">
-          <div className="flex flex-col items-center lg:items-start">
-            <PageHeading
-              backPath={"/auth"}
-              title={"Forgot Password"}
-              disbaledBackBtn={true}
-            />
-            <p className="drop-shadow text-hash mt-4 text-center lg:text-start">
-              Email address
-            </p>
+    <div className="flex items-center justify-center ">
+      <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[468px] mx-auto py-10 px-8">
+        <div className="flex flex-col  w-full max-w-md mx-auto mt-10 p-4 rounded-lg space-y-4">
+          <div>
+            {evMessage && (
+              <p className="text-lg text-center text-blue-900 font-bold">
+                {evMessage}
+              </p>
+            )}
           </div>
-          <Form
-            name="normal_login"
-            layout="vertical"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Please input valid email!",
-                },
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-              ]}
-            >
-              <Input
-                size="large"
-                placeholder="esteban_schiller@gmail.com"
-                className="rounded-full border-none bg-white-600 pl-6 focus-within:shadow-none focus-within:bg-white-600 hover:bg-white-600"
-              />
-            </Form.Item>
-            <div className="w-full flex justify-center pt-5">
-              <RoundedButton>Send a code</RoundedButton>
+          <div className="flex items-center gap-2">
+            <PageHeading
+              backPath={"/auth/sign-in"}
+              title={"Forgot Password"}
+              showArrow={true}
+            />
+          </div>
+          <h1>Please enter your email address to reset your password </h1>
+          {/* Input Fields */}
+          <div className="flex flex-col w-full space-y-4">
+            <div>
+              <h1 className="mb-3 text-xl">Enter your email</h1>
+              <div className="relative flex items-center">
+                {/* Lock Icon */}
+                <LuMailOpen color="#9C1B1B" className="absolute left-3 " />
+                {/* Input Field */}
+                <input
+                  type="email"
+                  value={emailForOtp?.email}
+                  onChange={(e) => {
+                    const userEmail = e.target.value;
+                    setEmailForOtp({ email: userEmail });
+                  }}
+                  placeholder="Enter your email"
+                  className="w-full pl-10 pr-10 py-2 border border-red-400 rounded-lg placeholder:text-black-300 focus:outline-none focus:border focus:border-black"
+                />
+              </div>
             </div>
-          </Form>
+            {/* // ))} */}
+          </div>
+
+          {/* Send OTP Button */}
+          <button
+            disabled={isLoading}
+            className="mt-6 w-full flex justify-center bg-red-700 disabled:bg-red-700/40 disabled:cursor-not-allowed text-white py-2 rounded-full hover:bg-red-900"
+            onClick={handleForgotPass}
+          >
+            {isLoading ? (
+              <LoadingSpinner size={5} color="stroke-white" />
+            ) : (
+              "Send OTP"
+            )}
+          </button>
         </div>
       </div>
     </div>

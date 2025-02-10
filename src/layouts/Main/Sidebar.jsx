@@ -28,9 +28,7 @@ const Sidebar = () => {
       confirmButtonColor: "#DC2626",
       reverseButtons: true,
     }).then((res) => {
-      console.log(res);
       if (res.isConfirmed) {
-        console.log("i am here");
         dispatch(logout());
       }
     });

@@ -9,7 +9,7 @@ export default function DashboardSummary() {
 
   if (isLoading) {
     return (
-      <div>
+      <div className="flex justify-center">
         <LoadingSpinner size={12} color="stroke-primary" />
       </div>
     );

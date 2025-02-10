@@ -1,104 +1,89 @@
-import { Button, Checkbox, Input } from "antd";
-import Form from "antd/es/form/Form";
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import image from "../../assets/images/verify.png";
-import PageHeading from "../../Components/PageHeading";
-import OTPInput from "react-otp-input";
-import Swal from "sweetalert2";
-import RoundedButton from "../../Components/RoundedButton";
-// import { useVerifyEmailMutation } from "../../redux/features/Auth/authApi";
+import { Input } from "antd";
+import { FaArrowLeft } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useVerifyEmailMutation } from "../../features/user/authSlice";
+import LoadingSpinner from "../../Components/LoadingSpinner";
+import localStorageUtil from "../../utils/localstorageutils";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [otp, setOtp] = useState("");
-  // const [mutation, { isLoading }] = useVerifyEmailMutation();
-  const onFinish = async (values) => {
-    if (isNaN(otp) || otp.length < 4) {
-      return Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text: "Please enter 4 digits OTP number!!.",
-      });
-    }
-    navigate(`/auth/reset-password`);
-    // try {
-    //   const response = await mutation({
-    //     email: id,
-    //     code: Number(otp),
-    //   });
-    //   // console.log(response);
-    //   if (response?.data?.statusCode == 200) {
-    //     localStorage.setItem("verify-token", response?.data?.data);
-    //     navigate(`/auth/reset-password`);
-    //   } else {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "failed!",
-    //       text:
-    //         response?.data?.message ||
-    //         response?.error?.data?.message ||
-    //         "Something went wrong. Please try again later.",
-    //     });
-    //   }
-    // } catch (error) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     // title: "Login Failed , Try Again...",
-    //     text: "Something went wrong. Please try again later.",
-    //   });
-    // }
+  const emailForOtpVerification = localStorageUtil.getItem("otpEmail");
+  const [verifyEmail, { isLoading }] = useVerifyEmailMutation();
+
+  const handleOtpChange = (text) => {
+    setOtp(text);
   };
+
+  const handleVerify = async () => {
+    if (!otp) {
+      toast.error("Please enter the OTP.");
+      return;
+    }
+
+    try {
+      if (!emailForOtpVerification) {
+        toast.error("Nothing found on localstorage!");
+        return;
+      }
+      const verificationData = {
+        email: emailForOtpVerification,
+        oneTimeCode: parseInt(otp),
+      };
+      const response = await verifyEmail(verificationData).unwrap();
+      if (response?.success) {
+        localStorageUtil.setItem("resetPassToken", response?.data?.data);
+        toast.success("Email verified successfully!");
+        localStorageUtil.removeItem("rpev");
+        localStorageUtil.setItem("rpev", true);
+        navigate("/auth/reset-password"); // Navigate to reset-password page on success
+      } else {
+        toast.error(response?.message || "Verification failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.data?.message || "Something went wrong!");
+    }
+  };
+
   return (
-    <div className="min-h-[92vh] w-full flex justify-center items-center gap-1 lg:gap-8 z-10">
-      {/* <div className="lg:border-r-2 border-primary mx-auto w-[90%] lg:p-[8%]">
-        <img src={image} alt="" />
-      </div> */}
-      <div className="lg:p-[5%] bg-white order-first lg:order-last rounded-xl">
-        <div className="w-full py-[64px] lg:px-[44px] space-y-5">
-          <div className="flex flex-col items-center lg:items-start">
-            <PageHeading
-              backPath={"/auth/forgot-password"}
-              title={"Verify Email"}
-              disbaledBackBtn={true}
-            />
-            <p className=" drop-shadow text-hash mt-5 text-center lg:text-left">
-              Please check your email. We have sent a code to contact @gmail.com
-            </p>
+    <div className="flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-lg mt-8 w-[610px] h-[468px] mx-auto py-10 px-8">
+        <div className="flex flex-col w-full max-w-md mx-auto mt-10 p-4 rounded-lg space-y-4">
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate(-1)}>
+              <FaArrowLeft className="cursor-pointer" />
+            </button>
+            <h1 className="text-2xl">Verify Email</h1>
           </div>
-          <Form
-            name="normal_login"
-            layout="vertical"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
+          <h1>Please enter the OTP we have sent to your email.</h1>
+
+          <Input.OTP
+            formatter={(str) => str.toUpperCase()}
+            size="large"
+            value={otp}
+            onChange={handleOtpChange}
+          />
+
+          <div className="flex justify-between items-center">
+            <h1>Didn’t receive the code?</h1>
+            <h1 className="text-red-500 cursor-pointer">Resend</h1>
+          </div>
+
+          {/* Verify OTP Button */}
+          <button
+            className="mt-6 w-full bg-red-700 text-white py-2 rounded-full flex justify-center hover:bg-red-800/90"
+            onClick={handleVerify}
+            disabled={isLoading}
           >
-            <div className="py-3 text-2xl font-semibold flex justify-center">
-              <OTPInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={6}
-                inputStyle={{
-                  height: "70px",
-                  width: "70px",
-                  margin: "20px",
-                  background: "#ECE8F1",
-                  border: "none",
-                  // marginRight: "auto",
-                  outline: "none",
-                  borderRadius: "16px",
-                  color: "black",
-                }}
-                renderSeparator={<span> </span>}
-                renderInput={(props) => <input {...props} />}
-              />
-            </div>
-            <div className="w-full flex justify-center pt-5">
-              <RoundedButton>Verify Code</RoundedButton>
-            </div>
-          </Form>
+            {isLoading ? (
+              <LoadingSpinner size={5} color="stroke-white" />
+            ) : (
+              "Verify"
+            )}
+          </button>
         </div>
       </div>
     </div>

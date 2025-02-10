@@ -11,16 +11,17 @@ export const apiSlice = createApi({
 
       if (
         !token &&
-        !["login", "forgotPass", "verifyEmail", "resetPassword"].includes(
+        !["login", "forgotPassword", "verifyEmail", "resetPassword"].includes(
           endpoint
         )
       ) {
+        console.log(endpoint);
         throw new Error("Authorization token is missing");
       }
 
       if (
         token &&
-        !["login", "forgotPass", "verifyEmail", "resetPassword"].includes(
+        !["login", "forgotPassword", "verifyEmail", "resetPassword"].includes(
           endpoint
         )
       ) {

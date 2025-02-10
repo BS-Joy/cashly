@@ -26,7 +26,11 @@ const Header = () => {
   let notifactionCount;
 
   if (isError) {
-    notifactionCount = <p className="text-white">!</p>;
+    notifactionCount = (
+      <p className="text-white flex items-center justify-center rounded-full">
+        !
+      </p>
+    );
   }
 
   if (isSuccess) {
