@@ -8,7 +8,21 @@ import { useState } from "react";
 import RoundedButton from "../../../Components/RoundedButton";
 import { AiOutlineFullscreen } from "react-icons/ai";
 
-export default function AgencyRequestCard({ item }) {
+const extractFileName = (path) => {
+  const fileName = path.split("/").pop();
+  return fileName;
+};
+
+function shortenFileName(fileName, maxLength = 20) {
+  if (fileName.length > maxLength) {
+    return fileName.slice(0, maxLength) + "...";
+  }
+  return fileName;
+}
+
+export default function AgencyRequestCard({ item, doc }) {
+  const agency = item?.agency;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -17,12 +31,11 @@ export default function AgencyRequestCard({ item }) {
     setModalData(data);
   };
 
-  const agency = item?.userId?.agency;
-
   const agencyImage = getImageUrl(agency?.image, defaultThumbnail);
 
-  const docImages = item.image;
-  const docPdf = item.document;
+  const docImages = doc[0]?.image || [];
+  const docPdf = doc[0]?.document || "";
+  const docFileName = shortenFileName(extractFileName(docPdf), 20);
 
   const handleDeleteConfirmation = () => {
     Swal.fire({
@@ -43,7 +56,7 @@ export default function AgencyRequestCard({ item }) {
     });
   };
   return (
-    <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2">
+    <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2 flex flex-col justify-between">
       <div className="flex items-center justify-center flex-col">
         <img
           src={agencyImage}
@@ -71,7 +84,7 @@ export default function AgencyRequestCard({ item }) {
                   alt="document_image"
                   className="w-16 h-16 object-contain rounded-full border border-primary"
                 />
-                <p>{`doc-${index + 1}`}</p>
+                <p>{shortenFileName(extractFileName(img))}</p>
                 <div
                   onClick={() =>
                     showModal({
@@ -97,14 +110,16 @@ export default function AgencyRequestCard({ item }) {
                   className="w-16 h-16 object-contain"
                 />
               </a>
-              <p>{`doc-${docImages.length + 1}`}</p>
+              <p>{docFileName}</p>
               {/* <PDFViewer
                 pdfUrl={import.meta.env.VITE_API_IMAGE_BASE_URL + docPdf}
               /> */}
             </div>
           )}
 
-          {!docImages && !docPdf ? "No documents found" : ""}
+          {docImages?.length < 1 && (!docPdf || docPdf?.length < 1)
+            ? "No documents found"
+            : ""}
         </div>
       </div>
       <div className="flex items-center justify-center gap-1">

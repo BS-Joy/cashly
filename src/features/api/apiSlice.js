@@ -36,6 +36,7 @@ export const apiSlice = createApi({
     "buyer",
     "buyerDoc",
     "agency",
+    "agencyDoc",
     "admin",
     "user",
     "terms",

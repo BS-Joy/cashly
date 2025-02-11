@@ -49,6 +49,28 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "buyerDoc", id: "LIST" }];
       },
     }),
+    getAgenciesDoc: builder.query({
+      query: () => "/document/get-document-agency",
+      providesTags: (result) => {
+        if (result?.data) {
+          const { result: agencyList } = result.data; // Rename 'result' to 'buyersList'
+
+          // Generate tags for each buyer
+          const agencyTags = agencyList.map(({ _id }) => ({
+            type: "agencyDoc",
+            id: _id,
+          }));
+
+          return [
+            ...agencyTags,
+            { type: "agencyDoc", id: "LIST" }, // Tag for the whole list
+          ];
+        }
+
+        // Return a fallback if no result exists
+        return [{ type: "agencyDoc", id: "LIST" }];
+      },
+    }),
     getAllAgencies: builder.query({
       query: (status) => `/agency/get-all-agencies?loginStatus=${status}`,
       providesTags: (result) => {
@@ -97,6 +119,7 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetAllBuyersQuery,
   useGetBuyersDocQuery,
+  useGetAgenciesDocQuery,
   useGetAllAgenciesQuery,
   useSuspendBuyerMutation,
 } = extendedBuyersApiSlice;

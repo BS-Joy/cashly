@@ -83,7 +83,7 @@ export default function BuyerRequestCard({ item, doc }) {
                   alt="document_image"
                   className="w-16 h-16 object-contain rounded-full border border-primary"
                 />
-                <p>{extractFileName(img)}</p>
+                <p>{shortenFileName(extractFileName(img))}</p>
                 <div
                   onClick={() =>
                     showModal({
