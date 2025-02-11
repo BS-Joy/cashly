@@ -3,7 +3,7 @@ import { driverItems } from "../../../constants/driver.constants";
 import {
   useGetAgenciesDocQuery,
   useGetAllAgenciesQuery,
-} from "../../../features/buyer/buyerAgencySlice";
+} from "../../../features/buyeragency/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 import AgencyRequestCard from "./AgencyRequestCard";
 

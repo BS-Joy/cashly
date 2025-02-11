@@ -9,7 +9,7 @@ import {
   useGetAllAgenciesQuery,
   useGetAllBuyersQuery,
   useSuspendUserMutation,
-} from "../../../features/buyer/buyerAgencySlice";
+} from "../../../features/buyeragency/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 import Swal from "sweetalert2";
 import RoundedButton from "../../../Components/RoundedButton";

@@ -7,7 +7,7 @@ import RoundedButton from "../../../Components/RoundedButton";
 import {
   useGetAllBuyersQuery,
   useSuspendUserMutation,
-} from "../../../features/buyer/buyerAgencySlice";
+} from "../../../features/buyeragency/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";

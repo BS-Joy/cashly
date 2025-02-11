@@ -109,7 +109,17 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         ];
       },
     }),
-
+    reactiveUser: builder.mutation({
+      query: (userId) => ({
+        url: `/user-suspention/user-active/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "buyer", id: arg },
+        { type: "agency", id: arg },
+        { type: "suspendedUser", id: "LIST" }, // Ensures suspended users list is updated
+      ],
+    }),
     getAllSuspendedUsers: builder.query({
       query: () => "/user-suspention/get-suspended-users",
       providesTags: (result) => {
@@ -132,6 +142,17 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "suspendedUser", id: "LIST" }];
       },
     }),
+    autoReactiveUser: builder.mutation({
+      query: () => ({
+        url: "/user-suspention/reactivate-user",
+        method: "POST",
+      }),
+      invalidatesTags: [
+        { type: "buyer", id: "LIST" },
+        { type: "agency", id: "LIST" },
+        { type: "suspendedUser", id: "LIST" },
+      ], // Ensures the UI updates automatically
+    }),
   }),
 });
 
@@ -142,4 +163,6 @@ export const {
   useGetAllAgenciesQuery,
   useSuspendUserMutation,
   useGetAllSuspendedUsersQuery,
+  useReactiveUserMutation,
+  useAutoReactiveUserMutation,
 } = extendedBuyersApiSlice;

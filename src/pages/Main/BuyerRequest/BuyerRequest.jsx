@@ -3,7 +3,7 @@ import LoadingSpinner from "../../../Components/LoadingSpinner";
 import {
   useGetAllBuyersQuery,
   useGetBuyersDocQuery,
-} from "../../../features/buyer/buyerAgencySlice";
+} from "../../../features/buyeragency/buyerAgencySlice";
 import BuyerRequestCard from "./BuyerRequestCard";
 
 const BuyerRequest = () => {
