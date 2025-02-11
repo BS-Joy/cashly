@@ -6,21 +6,22 @@ import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import RoundedButton from "../../../Components/RoundedButton";
 import {
   useGetAllBuyersQuery,
-  useSuspendBuyerMutation,
+  useSuspendUserMutation,
 } from "../../../features/buyer/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 const Buyers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
-  const [suspentionDays, setSuspentionDays] = useState(0);
+  const [suspentionDays, setSuspentionDays] = useState(1);
 
   const { data, isLoading, isError, isSuccess } =
     useGetAllBuyersQuery("approved");
 
   const [suspendBuyer, { isLoading: suspendLoading }] =
-    useSuspendBuyerMutation();
+    useSuspendUserMutation();
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -38,15 +39,16 @@ const Buyers = () => {
       reverseButtons: true,
     }).then(async (res) => {
       if (res.isConfirmed) {
-        console.log({
+        const res = await suspendBuyer({
           userId: modalData?.key,
-          day: parseInt(suspentionDays),
-        });
-        // const res = await suspendBuyer({
-        //   userId: modalData?.key,
-        //   day: suspentionDays,
-        // }).unwrap();
-        console.log("User suspended for: ", suspentionDays, "days");
+          days: suspentionDays,
+          toSuspend: "buyer",
+        }).unwrap();
+
+        if (res?.agency?._id) {
+          toast.success(`User Suspended for ${suspentionDays} days.`);
+          setIsModalOpen(false);
+        }
       }
     });
   };
@@ -175,17 +177,30 @@ const Buyers = () => {
           <input
             onChange={(e) => {
               const susDays = e.target.value;
-              setSuspentionDays(susDays);
+              if (susDays < 1) {
+                toast.error("Suspention day can't be less than 1", {
+                  position: "bottom-center",
+                });
+              } else {
+                setSuspentionDays(susDays);
+              }
             }}
             type="number"
             className="w-[100px] pl-5 border border-primary rounded outline-none"
             value={suspentionDays}
           />
+          {/* {suspentionError && (
+              <p className="text-red-500">{suspentionError}</p>
+            )} */}
           <RoundedButton
             onClickHandler={handleSuspention}
-            className="w-fit px-24"
+            className="w-fit px-24 flex justify-center"
           >
-            Suspend
+            {suspendLoading ? (
+              <LoadingSpinner size={5} color="stroke-white" />
+            ) : (
+              "Suspend"
+            )}
           </RoundedButton>
         </div>
       </DashboardModal>
