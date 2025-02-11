@@ -80,7 +80,7 @@ export const mainTheme = {
       colorTextHeading: "#758DFF",
       colorBgContainer: "#FFFFFF66",
       // colorText: "#ffffff",
-      headerBg: "#052255",
+      headerBg: "#932017",
       headerColor: "#ffffff",
       headerBorderRadius: 0,
       borderRadius: 0,
