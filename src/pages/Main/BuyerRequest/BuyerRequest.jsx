@@ -8,7 +8,7 @@ import BuyerRequestCard from "./BuyerRequestCard";
 
 const BuyerRequest = () => {
   const {
-    data: buyersList,
+    data: buyers,
     isLoading,
     isError,
     isSuccess,
@@ -39,8 +39,11 @@ const BuyerRequest = () => {
 
   if (isSuccess && docSuccess) {
     allBuyerDocs = data?.data?.result;
+    const buyersList =
+      buyers?.data?.result?.filter((buyer) => buyer?.isSuspended === false) ||
+      [];
 
-    if (buyersList.data.result.length === 0) {
+    if (buyersList?.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">
           No buyers request yet!
@@ -49,7 +52,7 @@ const BuyerRequest = () => {
     } else {
       pageContent = (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {buyersList.data.result.map((item, index) => {
+          {buyersList?.map((item, index) => {
             const buyerDoc = allBuyerDocs?.filter(
               (doc) => doc?.userId?.buyer?._id === item?.buyer?._id
             );
