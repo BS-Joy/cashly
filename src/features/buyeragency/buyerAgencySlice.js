@@ -153,6 +153,17 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         { type: "suspendedUser", id: "LIST" },
       ], // Ensures the UI updates automatically
     }),
+    buyerAgencyLoginStatus: builder.mutation({
+      query: ({ userId, status, toUpdate }) => ({
+        url: `/permission/update/${userId}`,
+        method: "PATCH",
+        body: { loginStatus: status },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: arg.toUpdate === "buyer" ? "buyer" : "agency", id: arg.userId }, // Invalidate specific user
+        { type: arg.toUpdate === "buyer" ? "buyer" : "agency", id: "LIST" }, // Invalidate entire list
+      ],
+    }),
   }),
 });
 
@@ -165,4 +176,5 @@ export const {
   useGetAllSuspendedUsersQuery,
   useReactiveUserMutation,
   useAutoReactiveUserMutation,
+  useBuyerAgencyLoginStatusMutation,
 } = extendedBuyersApiSlice;
