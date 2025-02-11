@@ -50,7 +50,7 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
       },
     }),
     getAllAgencies: builder.query({
-      query: () => "/agency/get-all-agencies",
+      query: (status) => `/agency/get-all-agencies?loginStatus=${status}`,
       providesTags: (result) => {
         if (result?.data) {
           const { result: agencyList } = result.data; // Rename 'result' to 'buyersList'

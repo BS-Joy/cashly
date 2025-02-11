@@ -48,10 +48,10 @@ const RejectedRequestsPage = () => {
     },
   ];
 
-  //   const showModal = (data) => {
-  //     setIsModalOpen(true);
-  //     setModalData(data);
-  //   };
+  const showModal = (data) => {
+    setIsModalOpen(true);
+    setModalData(data);
+  };
 
   const handleSuspention = async () => {
     Swal.fire({
@@ -97,18 +97,18 @@ const RejectedRequestsPage = () => {
       align: "center",
       render: (_, data) => (
         <div className="flex items-center justify-around text-center">
-          {/* <img
+          <img
             src={exlamIcon}
             alt="View Details"
             className="btn px-3 py-1 text-sm rounded-full cursor-pointer"
             onClick={() => showModal(data)}
-          /> */}
-          <button
+          />
+          {/* <button
             onClick={handleSuspention}
             className="bg-white border font-semibold text-primary border-primary px-4 rounded py-1 hover:bg-red-50"
           >
             Re-active User
-          </button>
+          </button> */}
         </div>
       ),
     },
@@ -133,7 +133,7 @@ const RejectedRequestsPage = () => {
         className="rounded-lg"
       />
 
-      {/* <DashboardModal
+      <DashboardModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         maxWidth="500px"
@@ -161,21 +161,21 @@ const RejectedRequestsPage = () => {
             <p>{modalData.subscription || "Not available"}</p>
           </div>
         </div>
-        <div className="flex gap-4 justify-center mt-4">
-          <input
-            onChange={(e) => setSuspentionDays(e.target.value)}
-            type="number"
-            className="w-[100px] pl-5 border border-primary rounded outline-none"
-            value={suspentionDays}
-          />
+        <div className="flex gap-4 px-4 justify-center mt-4">
           <RoundedButton
             onClickHandler={handleSuspention}
-            className="w-fit px-24"
+            className="w-fit px-16"
           >
-            Suspend
+            Approve
           </RoundedButton>
+          {/* <RoundedButton
+            onClickHandler={handleSuspention}
+            className="w-fit px-16"
+          >
+            Block
+          </RoundedButton> */}
         </div>
-      </DashboardModal> */}
+      </DashboardModal>
     </div>
   );
 };

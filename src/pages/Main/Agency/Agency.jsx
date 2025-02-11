@@ -47,7 +47,7 @@ const Agency = () => {
     isLoading,
     isError,
     isSuccess,
-  } = useGetAllAgenciesQuery();
+  } = useGetAllAgenciesQuery("approved");
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -111,7 +111,7 @@ const Agency = () => {
     console.log(agencyList);
     if (agencyList.data.result.length === 0) {
       pageContent = (
-        <div className="text-center text-gray-500 mt-4">No buyers found.</div>
+        <div className="text-center text-gray-500 mt-4">No agency found.</div>
       );
     } else {
       pageContent = (

@@ -16,12 +16,8 @@ const Buyers = () => {
   const [modalData, setModalData] = useState({});
   const [suspentionDays, setSuspentionDays] = useState(0);
 
-  const {
-    data: buyersList,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useGetAllBuyersQuery("approved");
+  const { data, isLoading, isError, isSuccess } =
+    useGetAllBuyersQuery("approved");
 
   const [suspendBuyer, { isLoading: suspendLoading }] =
     useSuspendBuyerMutation();
@@ -109,12 +105,10 @@ const Buyers = () => {
   }
 
   if (isSuccess) {
-    // console.log(buyersList);
-    // const filteredBuyers = buyersList.data.result.filter(
-    //   (d) => d.loginStatus === "approved"
-    // );
+    const buyersList =
+      data.data.result?.filter((buyer) => buyer?.isSuspended === false) || [];
 
-    if (buyersList.data.result.length === 0) {
+    if (buyersList.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">No buyers found.</div>
       );
@@ -122,17 +116,17 @@ const Buyers = () => {
       pageContent = (
         <Table
           columns={columns}
-          dataSource={buyersList.data.result.map((item, index) => ({
+          dataSource={buyersList.map((item, index) => ({
             key: item._id,
             index: index + 1, // SL number
             name: item.buyer
-              ? `${item.buyer.firstName || ""} ${
-                  item.buyer.lastName || ""
+              ? `${item?.buyer?.firstName || ""} ${
+                  item?.buyer?.lastName || ""
                 }`.trim() || "Not available"
               : "Not available",
 
-            email: item.buyer.email || "Not available",
-            phone: item.buyer.phone || "Not available",
+            email: item?.buyer?.email || "Not available",
+            phone: item?.buyer?.phone || "Not available",
             transAmount: item.transAmount || "Not available",
             subscription: item.subscription || "Not available",
           }))}
