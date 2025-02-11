@@ -134,16 +134,6 @@ export const dashboardItems = [
     ),
   },
   {
-    name: "Add Admin",
-    path: "admins",
-    icon: GrUserSettings,
-    element: (
-      <PrivateProtectedRoute>
-        <Admin />
-      </PrivateProtectedRoute>
-    ),
-  },
-  {
     name: "Suspended Users",
     path: "suspends",
     icon: RiUserUnfollowLine,
@@ -153,6 +143,17 @@ export const dashboardItems = [
       </PrivateProtectedRoute>
     ),
   },
+  {
+    name: "Add Admin",
+    path: "admins",
+    icon: GrUserSettings,
+    element: (
+      <PrivateProtectedRoute>
+        <Admin />
+      </PrivateProtectedRoute>
+    ),
+  },
+
   {
     name: "Subscription",
     path: "subscription",

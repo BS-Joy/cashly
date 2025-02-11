@@ -10,10 +10,37 @@ import {
   useGetAllBuyersQuery,
 } from "../../../features/buyer/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
+import Swal from "sweetalert2";
+import RoundedButton from "../../../Components/RoundedButton";
 
 const Agency = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
+  const [suspentionDays, setSuspentionDays] = useState(0);
+
+  const handleSuspention = async () => {
+    Swal.fire({
+      text: "Are you sure you want to suspend this user?",
+      showCancelButton: true,
+      confirmButtonText: "     Sure    ",
+      cancelButtonText: "Cancel",
+      showConfirmButton: true,
+      confirmButtonColor: "#DC2626",
+      reverseButtons: true,
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        console.log({
+          userId: modalData?.key,
+          day: parseInt(suspentionDays),
+        });
+        // const res = await suspendBuyer({
+        //   userId: modalData?.key,
+        //   day: suspentionDays,
+        // }).unwrap();
+        console.log("User suspended for: ", suspentionDays, "days");
+      }
+    });
+  };
 
   const {
     data: agencyList,
@@ -81,6 +108,7 @@ const Agency = () => {
   }
 
   if (isSuccess) {
+    console.log(agencyList);
     if (agencyList.data.result.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">No buyers found.</div>
@@ -90,7 +118,7 @@ const Agency = () => {
         <Table
           columns={columns}
           dataSource={agencyList.data.result.map((item, index) => {
-            const agency = item.userId.agency;
+            const agency = item.agency;
             return {
               key: agency._id,
               index: index + 1, // SL number
@@ -148,10 +176,22 @@ const Agency = () => {
             <p>{modalData.subscription || "Not available"}</p>
           </div>
 
-          <div className="p-4 mt-auto text-center mx-auto flex items-center justify-center">
-            <button className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-lg outline-none rounded-2xl">
-              <span className="text-white font-light">Download</span>
-            </button>
+          <div className="flex gap-4 justify-center mt-4">
+            <input
+              onChange={(e) => {
+                const susDays = e.target.value;
+                setSuspentionDays(susDays);
+              }}
+              type="number"
+              className="w-[100px] pl-5 border border-primary rounded outline-none"
+              value={suspentionDays}
+            />
+            <RoundedButton
+              onClickHandler={handleSuspention}
+              className="w-fit px-24"
+            >
+              Suspend
+            </RoundedButton>
           </div>
         </div>
       </DashboardModal>

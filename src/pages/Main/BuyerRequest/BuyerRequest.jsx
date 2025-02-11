@@ -15,7 +15,7 @@ const BuyerRequest = () => {
   } = useGetAllBuyersQuery("pending");
 
   const {
-    data: buyersDocs,
+    data,
     isLoading: docLoading,
     isError: docError,
     isSuccess: docSuccess,
@@ -37,8 +37,9 @@ const BuyerRequest = () => {
     pageContent = <p className="text-red-500">Something went wrong!</p>;
   }
 
-  if (isSuccess || docSuccess) {
-    // console.log(allBuyerDocs);
+  if (isSuccess && docSuccess) {
+    allBuyerDocs = data?.data?.result;
+
     if (buyersList.data.result.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">

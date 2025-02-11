@@ -21,6 +21,7 @@ function shortenFileName(fileName, maxLength = 20) {
 }
 
 export default function BuyerRequestCard({ item, doc }) {
+  console.log(doc);
   const buyer = item?.buyer;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
