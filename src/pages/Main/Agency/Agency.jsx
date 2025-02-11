@@ -42,12 +42,8 @@ const Agency = () => {
     });
   };
 
-  const {
-    data: agencyList,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useGetAllAgenciesQuery("approved");
+  const { data, isLoading, isError, isSuccess } =
+    useGetAllAgenciesQuery("approved");
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -108,8 +104,10 @@ const Agency = () => {
   }
 
   if (isSuccess) {
-    console.log(agencyList);
-    if (agencyList.data.result.length === 0) {
+    const agencyList =
+      data?.data?.result?.filter((agency) => agency?.isSuspended === false) ||
+      [];
+    if (agencyList?.length === 0) {
       pageContent = (
         <div className="text-center text-gray-500 mt-4">No agency found.</div>
       );
@@ -117,7 +115,7 @@ const Agency = () => {
       pageContent = (
         <Table
           columns={columns}
-          dataSource={agencyList.data.result.map((item, index) => {
+          dataSource={agencyList?.map((item, index) => {
             const agency = item.agency;
             return {
               key: agency._id,
