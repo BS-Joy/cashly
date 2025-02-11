@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Table } from "antd";
-import { FiAlertCircle } from "react-icons/fi";
+import { Table } from "antd";
 import DashboardModal from "../../../Components/DashboardModal";
-import { IoSearch } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import {
   useGetAllAgenciesQuery,
-  useGetAllBuyersQuery,
   useSuspendUserMutation,
 } from "../../../features/buyeragency/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";

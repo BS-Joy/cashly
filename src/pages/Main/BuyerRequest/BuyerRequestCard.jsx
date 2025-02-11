@@ -31,7 +31,7 @@ export default function BuyerRequestCard({ item, doc }) {
 
   const [updateStatus] = useBuyerAgencyLoginStatusMutation();
   const [loadingStates, setLoadingStates] = useState({
-    approve: false,
+    approved: false,
     cancel: false,
   });
 
@@ -152,12 +152,12 @@ export default function BuyerRequestCard({ item, doc }) {
       <div className="flex items-center justify-center gap-1">
         <div className="p-4 text-center flex items-center justify-center">
           <button
-            onClick={() => handleLoginStatus("approve")}
+            onClick={() => handleLoginStatus("approved")}
             className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-sm outline-none rounded-lg"
-            disabled={loadingStates.approve}
+            disabled={loadingStates.approved}
           >
             <span className="text-white font-light">
-              {loadingStates.approve ? (
+              {loadingStates.approved ? (
                 <LoadingSpinner size={4} color="stroke-white" />
               ) : (
                 "Approved"
