@@ -9,6 +9,7 @@ import RoundedButton from "../../../Components/RoundedButton";
 import { AiOutlineFullscreen } from "react-icons/ai";
 import { useBuyerAgencyLoginStatusMutation } from "../../../features/buyeragency/buyerAgencySlice";
 import toast from "react-hot-toast";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
 
 const extractFileName = (path) => {
   const fileName = path.split("/").pop();
@@ -24,10 +25,15 @@ function shortenFileName(fileName, maxLength = 20) {
 
 export default function BuyerRequestCard({ item, doc }) {
   const buyer = item?.buyer;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
-  const [updateStatus, { isLoading }] = useBuyerAgencyLoginStatusMutation();
+  const [updateStatus] = useBuyerAgencyLoginStatusMutation();
+  const [loadingStates, setLoadingStates] = useState({
+    approve: false,
+    cancel: false,
+  });
 
   const showModal = (data) => {
     setIsModalOpen(true);
@@ -42,6 +48,12 @@ export default function BuyerRequestCard({ item, doc }) {
 
   const handleLoginStatus = async (status) => {
     try {
+      // Set loading for the clicked button only
+      setLoadingStates((prev) => ({
+        ...prev,
+        [status]: true,
+      }));
+
       const body = {
         userId: item?._id,
         status,
@@ -57,6 +69,12 @@ export default function BuyerRequestCard({ item, doc }) {
     } catch (error) {
       console.log(error);
       toast.error(error?.message || "Something went wrong!");
+    } finally {
+      // Reset loading for the clicked button only
+      setLoadingStates((prev) => ({
+        ...prev,
+        [status]: false,
+      }));
     }
   };
 
@@ -129,21 +147,37 @@ export default function BuyerRequestCard({ item, doc }) {
             : ""}
         </div>
       </div>
+
+      {/* buttons */}
       <div className="flex items-center justify-center gap-1">
-        <div className="p-4  text-center flex items-center justify-center">
+        <div className="p-4 text-center flex items-center justify-center">
           <button
             onClick={() => handleLoginStatus("approve")}
             className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-sm outline-none rounded-lg"
+            disabled={loadingStates.approve}
           >
-            <span className="text-white font-light">Approved</span>
+            <span className="text-white font-light">
+              {loadingStates.approve ? (
+                <LoadingSpinner size={4} color="stroke-white" />
+              ) : (
+                "Approved"
+              )}
+            </span>
           </button>
         </div>
-        <div className="p-4  text-center flex items-center justify-center">
+        <div className="p-4 text-center flex items-center justify-center">
           <button
             onClick={() => handleLoginStatus("cancel")}
             className="w-fit bg-transparent text-black border border-red-700 px-10 py-[7px] flex items-center justify-center gap-3 text-sm outline-none rounded-lg"
+            disabled={loadingStates.cancel}
           >
-            <span className="text-black font-light">Cancel</span>
+            <span className="text-black font-light">
+              {loadingStates.cancel ? (
+                <LoadingSpinner size={4} color="stroke-primary" />
+              ) : (
+                "Cancel"
+              )}
+            </span>
           </button>
         </div>
       </div>

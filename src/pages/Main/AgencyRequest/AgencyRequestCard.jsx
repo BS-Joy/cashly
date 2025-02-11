@@ -7,6 +7,9 @@ import DashboardModal from "../../../Components/DashboardModal";
 import { useState } from "react";
 import RoundedButton from "../../../Components/RoundedButton";
 import { AiOutlineFullscreen } from "react-icons/ai";
+import { useBuyerAgencyLoginStatusMutation } from "../../../features/buyeragency/buyerAgencySlice";
+import LoadingSpinner from "../../../Components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const extractFileName = (path) => {
   const fileName = path.split("/").pop();
@@ -26,6 +29,12 @@ export default function AgencyRequestCard({ item, doc }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
 
+  const [updateStatus] = useBuyerAgencyLoginStatusMutation();
+  const [loadingStates, setLoadingStates] = useState({
+    approve: false,
+    cancel: false,
+  });
+
   const showModal = (data) => {
     setIsModalOpen(true);
     setModalData(data);
@@ -37,24 +46,38 @@ export default function AgencyRequestCard({ item, doc }) {
   const docPdf = doc[0]?.document || "";
   const docFileName = shortenFileName(extractFileName(docPdf), 20);
 
-  const handleDeleteConfirmation = () => {
-    Swal.fire({
-      text: "Are you sure you want to cancel the request?",
-      showCancelButton: true,
-      confirmButtonText: "     Sure    ",
-      cancelButtonText: "Cancel",
-      showConfirmButton: true,
-      confirmButtonColor: "#DC2626",
-      reverseButtons: true,
-    }).then((res) => {
-      if (res.isConfirmed) {
-        // dispatch(logout());
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("user-update");
-        // navigate("/auth");
+  const handleLoginStatus = async (status) => {
+    try {
+      // Set loading for the clicked button only
+      setLoadingStates((prev) => ({
+        ...prev,
+        [status]: true,
+      }));
+
+      const body = {
+        userId: item?._id,
+        status,
+        toUpdate: "agency",
+      };
+      const res = await updateStatus(body).unwrap();
+
+      if (res?.success) {
+        toast.success(
+          status === "cancel" ? "Request rejected." : "Request Approved"
+        );
       }
-    });
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.message || "Something went wrong!");
+    } finally {
+      // Reset loading for the clicked button only
+      setLoadingStates((prev) => ({
+        ...prev,
+        [status]: false,
+      }));
+    }
   };
+
   return (
     <div className="bg-white py-2 rounded-md shadow-md border-gray-200 border-2 flex flex-col justify-between">
       <div className="flex items-center justify-center flex-col">
@@ -124,18 +147,37 @@ export default function AgencyRequestCard({ item, doc }) {
             : ""}
         </div>
       </div>
+
+      {/* buttons */}
       <div className="flex items-center justify-center gap-1">
-        <div className="p-4  text-center flex items-center justify-center">
-          <button className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-sm outline-none rounded-lg">
-            <span className="text-white font-light">Approved</span>
+        <div className="p-4 text-center flex items-center justify-center">
+          <button
+            onClick={() => handleLoginStatus("approve")}
+            className="w-fit bg-red-700 text-white px-10 py-2 flex items-center justify-center gap-3 text-sm outline-none rounded-lg"
+            disabled={loadingStates.approve}
+          >
+            <span className="text-white font-light">
+              {loadingStates.approve ? (
+                <LoadingSpinner size={4} color="stroke-white" />
+              ) : (
+                "Approved"
+              )}
+            </span>
           </button>
         </div>
-        <div className="p-4  text-center flex items-center justify-center">
+        <div className="p-4 text-center flex items-center justify-center">
           <button
-            onClick={handleDeleteConfirmation}
+            onClick={() => handleLoginStatus("cancel")}
             className="w-fit bg-transparent text-black border border-red-700 px-10 py-[7px] flex items-center justify-center gap-3 text-sm outline-none rounded-lg"
+            disabled={loadingStates.cancel}
           >
-            <span className="text-black font-light">Cancel</span>
+            <span className="text-black font-light">
+              {loadingStates.cancel ? (
+                <LoadingSpinner size={4} color="stroke-primary" />
+              ) : (
+                "Cancel"
+              )}
+            </span>
           </button>
         </div>
       </div>
