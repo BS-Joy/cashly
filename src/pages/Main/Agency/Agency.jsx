@@ -8,15 +8,20 @@ import exlamIcon from "../../../assets/images/exclamation-circle.png";
 import {
   useGetAllAgenciesQuery,
   useGetAllBuyersQuery,
+  useSuspendUserMutation,
 } from "../../../features/buyer/buyerAgencySlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 import Swal from "sweetalert2";
 import RoundedButton from "../../../Components/RoundedButton";
+import toast from "react-hot-toast";
 
 const Agency = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
-  const [suspentionDays, setSuspentionDays] = useState(0);
+  const [suspentionDays, setSuspentionDays] = useState(1);
+
+  const [suspendAgency, { isLoading: suspendLoading }] =
+    useSuspendUserMutation();
 
   const handleSuspention = async () => {
     Swal.fire({
@@ -29,15 +34,17 @@ const Agency = () => {
       reverseButtons: true,
     }).then(async (res) => {
       if (res.isConfirmed) {
-        console.log({
+        const res = await suspendAgency({
           userId: modalData?.key,
-          day: parseInt(suspentionDays),
-        });
-        // const res = await suspendBuyer({
-        //   userId: modalData?.key,
-        //   day: suspentionDays,
-        // }).unwrap();
-        console.log("User suspended for: ", suspentionDays, "days");
+          days: suspentionDays,
+          toSuspend: "agency",
+        }).unwrap();
+
+        if (res?.agency?._id) {
+          toast.success(`User Suspended for ${suspentionDays} days.`);
+          setIsModalOpen(false);
+        }
+        console.log(modalData);
       }
     });
   };
@@ -118,7 +125,7 @@ const Agency = () => {
           dataSource={agencyList?.map((item, index) => {
             const agency = item.agency;
             return {
-              key: agency._id,
+              key: item._id,
               index: index + 1, // SL number
               name: agency
                 ? `${agency.firstName || ""} ${agency.lastName || ""}`.trim() ||
@@ -178,7 +185,13 @@ const Agency = () => {
             <input
               onChange={(e) => {
                 const susDays = e.target.value;
-                setSuspentionDays(susDays);
+                if (susDays < 1) {
+                  toast.error("Suspention day can't be less than 1", {
+                    position: "bottom-center",
+                  });
+                } else {
+                  setSuspentionDays(susDays);
+                }
               }}
               type="number"
               className="w-[100px] pl-5 border border-primary rounded outline-none"
@@ -188,7 +201,11 @@ const Agency = () => {
               onClickHandler={handleSuspention}
               className="w-fit px-24"
             >
-              Suspend
+              {suspendLoading ? (
+                <LoadingSpinner size={5} color="stroke-white" />
+              ) : (
+                "Suspend"
+              )}
             </RoundedButton>
           </div>
         </div>

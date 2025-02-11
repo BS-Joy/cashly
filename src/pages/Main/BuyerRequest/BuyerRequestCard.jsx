@@ -63,8 +63,10 @@ export default function BuyerRequestCard({ item, doc }) {
           onError={(e) => (e.target.src = defaultThumbnail)}
           className="w-16 h-16 object-contain rounded-full"
         />
-        <h3 className="text-black">{item.name}</h3>
-        <p className="text-black/90 text-sm">{item.designation}</p>
+        <h3 className="text-black text-xl">
+          {item?.buyer?.firstName + " " + item?.buyer?.lastName}
+        </h3>
+        <p className="text-black/90 text-sm">{item.role}</p>
       </div>
       <div className="driver-request__info">
         <h1 className="text-sm md:text-xl text-black pl-4 mb-3">Documents</h1>
