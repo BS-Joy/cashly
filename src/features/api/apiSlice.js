@@ -38,6 +38,7 @@ export const apiSlice = createApi({
     "agency",
     "agencyDoc",
     "admin",
+    "suspendedUser",
     "user",
     "terms",
     "privacy",

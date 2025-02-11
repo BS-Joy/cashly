@@ -113,6 +113,28 @@ export const extendedBuyersApiSlice = apiSlice.injectEndpoints({
         return [{ type: "agency", id: arg?.userId }];
       },
     }),
+    getAllSuspendedUsers: builder.query({
+      query: () => "/user-suspention/get-suspended-users",
+      providesTags: (result) => {
+        if (result?.data) {
+          const suspendUsers = result.data; // Rename 'result' to 'buyersList'
+
+          // Generate tags for each buyer
+          const suspendUserTags = suspendUsers.map(({ _id }) => ({
+            type: "suspendedUser",
+            id: _id,
+          }));
+
+          return [
+            ...suspendUserTags,
+            { type: "suspendedUser", id: "LIST" }, // Tag for the whole list
+          ];
+        }
+
+        // Return a fallback if no result exists
+        return [{ type: "suspendedUser", id: "LIST" }];
+      },
+    }),
   }),
 });
 
@@ -122,4 +144,5 @@ export const {
   useGetAgenciesDocQuery,
   useGetAllAgenciesQuery,
   useSuspendBuyerMutation,
+  useGetAllSuspendedUsersQuery,
 } = extendedBuyersApiSlice;
