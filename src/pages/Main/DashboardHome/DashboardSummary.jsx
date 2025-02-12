@@ -14,6 +14,9 @@ export default function DashboardSummary() {
       </div>
     );
   }
+  if (isError) {
+    return <p>Sorry. Something went wrong!</p>;
+  }
 
   if (isSuccess) {
     return (
@@ -52,9 +55,5 @@ export default function DashboardSummary() {
         </div>
       </div>
     );
-  }
-
-  if (isError) {
-    return <p>Sorry. Something went wrong!</p>;
   }
 }

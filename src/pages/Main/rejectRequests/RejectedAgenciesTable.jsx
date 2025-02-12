@@ -71,7 +71,6 @@ const RejectedAgenciesTable = () => {
   } else if (isError) {
     pageContent = <p className="text-red-500">Something went wrong!</p>;
   } else if (isSuccess) {
-    console.log(data);
     const agenciesList =
       data?.data?.result?.filter((agency) => agency?.isSuspended === false) ||
       [];

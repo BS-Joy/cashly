@@ -12,24 +12,19 @@ import ResetPassword from "../pages/Auth/ResetPassword";
 import SuccessPasswordChange from "../pages/Auth/SuccessPasswordChange";
 import PublicRoute from "./PublicRoute";
 import PublicProtectedRoute from "./PublicProtectedRoute";
+import ErrorPage from "../Components/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
     children: routesGenerators(dashboardItems),
+    errorElement: <ErrorPage />,
   },
-  // {
-  //   path: "/support-chat",
-  //   element: <ChatPage />,
-  // },
-  // {
-  //   path: "/change-password",
-  //   element: <ChangePassword />,
-  // },
   {
     path: "/auth",
     element: <Auth />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/auth",
