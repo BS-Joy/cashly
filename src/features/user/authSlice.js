@@ -13,8 +13,6 @@ export const extendedAuthApiSlice = apiSlice.injectEndpoints({
         };
       },
       transformResponse: (response) => {
-        const cookies = new Cookies();
-
         localStorageUtil.setItem("token", response?.data?.accessToken);
 
         return response;

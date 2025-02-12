@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useGetDashboardSummaryQuery } from "../../../features/dashboard/dashboardSlice";
-import { Cookies } from "react-cookie";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
 
 export default function DashboardSummary() {

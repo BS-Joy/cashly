@@ -18,7 +18,6 @@ const defaultThumbnail =
   "https://www.clipartmax.com/png/middle/443-4437996_pin-headshot-clipart-headshot-placeholder.png";
 
 const EditMyProfile = () => {
-  const cookies = new Cookies();
   const navigate = useNavigate();
   const imageInputRef = useRef();
   const dispatch = useDispatch();

@@ -1,16 +1,12 @@
+import localStorageUtil from "../../utils/localstorageutils";
 import { apiSlice } from "../api/apiSlice";
-import { Cookies } from "react-cookie";
 
-const cookies = new Cookies();
-const token = cookies.get("token");
+const token = localStorageUtil.getItem("token");
 
 export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardSummary: builder.query({
       query: () => {
-        const cookies = new Cookies();
-        const token = cookies.get("token");
-
         return {
           url: "/dashboard/get-total-statistics",
           headers: {
@@ -22,9 +18,6 @@ export const extendedDashboardApiSlice = apiSlice.injectEndpoints({
     }),
     getEarningDataForChart: builder.query({
       query: () => {
-        const cookies = new Cookies();
-        const token = cookies.get("token");
-
         return {
           url: "/dashboard/get-total-earning",
           headers: {

@@ -1,4 +1,3 @@
-import { Cookies } from "react-cookie";
 import { apiSlice } from "../api/apiSlice";
 
 export const extendedBuyersApiSlice = apiSlice.injectEndpoints({

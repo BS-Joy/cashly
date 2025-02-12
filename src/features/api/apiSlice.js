@@ -6,7 +6,6 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_API_BASE_URL}`,
     prepareHeaders: (headers, { endpoint }) => {
-      // const cookies = new Cookies();
       const token = localStorageUtil.getItem("token");
 
       if (

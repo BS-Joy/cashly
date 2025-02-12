@@ -4,7 +4,6 @@ import localStorageUtil from "../utils/localstorageutils";
 import useAuth from "../hooks/useAuth";
 
 export default function PrivateProtectedRoute({ children }) {
-  // const cookies = new Cookies();
   const isTokenAvailable = localStorageUtil.getItem("token");
 
   const user = useAuth();

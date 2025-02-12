@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Cookies } from "react-cookie";
 import localStorageUtil from "../../utils/localstorageutils";
 
-const cookies = new Cookies();
-
 const userProfileData = localStorageUtil.getItem("user_profile");
 
 const initialState = {
@@ -22,10 +20,6 @@ export const userSlice = createSlice({
       localStorageUtil.removeItem("token");
       localStorageUtil.removeItem("user_profile");
       localStorageUtil.removeItem("rpev");
-
-      // const user = cookies.get("user_profile");
-
-      // console.log(user);
     },
   },
 });

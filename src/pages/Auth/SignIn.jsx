@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../features/user/userSlice";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../../Components/LoadingSpinner";
-import { Cookies } from "react-cookie";
 import localStorageUtil from "../../utils/localstorageutils";
 // import { usePostLoginMutation } from "../../redux/features/Auth/authApi";
 // import { setUser } from "../../redux/features/Auth/authSlice";
@@ -19,7 +18,6 @@ const SignIn = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginMutation();
-  const cookies = new Cookies();
 
   const onFinish = async (values) => {
     try {
